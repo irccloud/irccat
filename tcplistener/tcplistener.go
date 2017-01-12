@@ -16,7 +16,7 @@ type TCPListener struct {
 	irc    *irc.Connection
 }
 
-func Bind() (*TCPListener, error) {
+func New() (*TCPListener, error) {
 	var err error
 
 	listener := TCPListener{}

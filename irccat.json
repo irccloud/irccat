@@ -1,11 +1,16 @@
 {
   "tcp_listen": ":12345",
-  "http_listen": ":8045",
+  "http": {
+    "listen": ":8045",
+    "listeners": {
+      "grafana": "#russtest"
+    }
+  },
   "irc": {
     "server": "irc.irccloud.com:6667",
     "tls": false,
     "tls_skip_verify": true,
-    "nick": "gocat",
+    "nick": "irccat2",
     "realname": "IRCCat",
     "channels": ["#russtest"]
   }

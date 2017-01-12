@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"github.com/irccloud/irccat/httplistener"
 	"github.com/irccloud/irccat/tcplistener"
 	"github.com/juju/loggo"
 	"github.com/spf13/viper"
@@ -29,7 +30,7 @@ func main() {
 
 	irccat := IRCCat{}
 
-	irccat.tcp, err = tcplistener.Bind()
+	irccat.tcp, err = tcplistener.New()
 	if err != nil {
 		return
 	}
@@ -40,6 +41,8 @@ func main() {
 		log.Criticalf("Error connecting to IRC server: %s", err)
 		return
 	}
+
+	httplistener.New(irccat.irc)
 
 	irccat.tcp.Run(irccat.irc)
 	irccat.irc.Loop()
