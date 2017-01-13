@@ -97,6 +97,7 @@ func (i *IRCCat) connectIRC() error {
 }
 
 func (i *IRCCat) handleWelcome(e *irc.Event) {
+	log.Infof("Connected, joining channels...")
 	for _, channel := range viper.GetStringSlice("irc.channels") {
 		i.irc.Join(channel)
 	}
