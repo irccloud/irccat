@@ -13,5 +13,10 @@
     "nick": "irccat2",
     "realname": "IRCCat",
     "channels": ["#russtest"]
+  },
+  "commands": {
+    "auth_channel": "#russtest",
+    "handler": "./examples/command_runner.py",
+    "max_response_lines": 15
   }
 }
