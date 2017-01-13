@@ -29,8 +29,8 @@ func New(irc *irc.Connection) (*HTTPListener, error) {
 
 	hl.http.Handler = mux
 	log.Infof("Listening for HTTP requests on %s", viper.GetString("http.listen"))
-	if viper.GetBool("http.ssl") {
-		go hl.http.ListenAndServeTLS(viper.GetString("http.ssl_cert"), viper.GetString("http.ssl_key"))
+	if viper.GetBool("http.tls") {
+		go hl.http.ListenAndServeTLS(viper.GetString("http.tls_cert"), viper.GetString("http.tls_key"))
 	} else {
 		go hl.http.ListenAndServe()
 	}

@@ -2,9 +2,9 @@
   "tcp_listen": ":12345",
   "http": {
     "listen": ":8045",
-    "ssl": false,
-    "ssl_key": "",
-    "ssl_cert": "",
+    "tls": false,
+    "tls_key": "",
+    "tls_cert": "",
     "listeners": {
       "grafana": "#russtest"
     }
