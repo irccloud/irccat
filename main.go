@@ -53,7 +53,9 @@ func main() {
 		return
 	}
 
-	httplistener.New(irccat.irc)
+	if viper.IsSet("http") {
+		httplistener.New(irccat.irc)
+	}
 
 	irccat.tcp.Run(irccat.irc)
 	irccat.irc.Loop()

@@ -20,6 +20,9 @@ func New(irc *irc.Connection) (*HTTPListener, error) {
 	hl.http = http.Server{Addr: viper.GetString("http.listen")}
 
 	mux := http.NewServeMux()
+
+	mux.HandleFunc("/send", hl.genericHandler)
+
 	if viper.IsSet("http.listeners.grafana") {
 		mux.HandleFunc("/grafana", hl.grafanaAlertHandler)
 	}
