@@ -11,6 +11,7 @@ before_deploy:
 - gox -os="linux darwin" -arch="amd64 386" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
 deploy:
   provider: releases
+  skip_cleanup: true
   api_key:
     secure: LguVQAhSM/EYxWA/V2R3MWLZRe4/fYHwmtmocd2Eiu3KJ/hU++7+qp2Vj1P/bnPVF0fs7PWZPprhCB5FWOiYqqeJcKjRGXdQXBlXLS+DGLYi8gdPFWra4Iil2sDS8AxxxL9/WnjsDpBJmBmf0XO/EyDgKh/E9fNc+IbntJNkR7HGbcpBNl6XPOpxxxKRfAuNwl0s9jt8FxY8SHQoOcFbsT0NpdkOCWVAGq5nSsAIavAoA2XtNE17ZNFgfMEFAD03nlgU29IdIFExTlau4vpzHYq9xcVj1b3+xUKc9sz9DCL4lWk6r6a0Cobyj2KIFd2tJzsXXAipRF4Aj7i3sSR2OU6Z3cs0o3WWMQMGi8XblaTINuMBMWM25mCfw8BldTvcxdyj4fLU5k6i9bB4OWxhW+kcQqpC1GQyZn+0JdOZjlyXflksKPpf6nk61l5zvf26no5eDMEWS4ODcNJUxVsGn6DhnSjiMjnPQZ1bstW1//BbcejlzugEtOO8BA14njfY6idcZfuwq6iCSlT3HniVRl99anNImP9Ok5GjCwJa2Slu3dK5jrvWB5/dT4nVcSVL0krDt6926YNA+9IONjJnUUoYzsSTRTFU07KDn1/isP8Ki7q/0KJvdRmXK3dp8VSfaTAOCPY4R0Gh0LwI5lS1TYdRXyvYgdG3j0f2hCfLnsU=
   file:
