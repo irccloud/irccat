@@ -54,7 +54,7 @@ func (l *TCPListener) handleConnection(conn net.Conn) {
 		}
 		msg = strings.Trim(msg, "\r\n")
 		if len(msg) > 0 {
-			log.Debugf("Message: %s", msg)
+			log.Infof("[%s] message: %s", conn.RemoteAddr(), msg)
 			l.parseMessage(msg)
 		}
 	}
