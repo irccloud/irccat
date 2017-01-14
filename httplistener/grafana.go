@@ -38,5 +38,7 @@ func (hl *HTTPListener) grafanaAlertHandler(w http.ResponseWriter, request *http
 		msg += fmt.Sprintf(" %s:%f", match.Metric, match.Value)
 	}
 	msg += " " + alert.RuleUrl
+
+	log.Infof("%s [%s] Grafana alert", request.RemoteAddr, viper.GetString("http.listeners.grafana"))
 	hl.irc.Privmsgf(viper.GetString("http.listeners.grafana"), msg)
 }

@@ -22,7 +22,7 @@ func (hl *HTTPListener) genericHandler(w http.ResponseWriter, request *http.Requ
 	buf.ReadFrom(request.Body)
 	json.Unmarshal(buf.Bytes(), &message)
 
-	log.Infof("[%s] %s", message.To, message.Body)
+	log.Infof("%s [%s] %s", request.RemoteAddr, message.To, message.Body)
 
 	if message.To != "" && message.Body != "" {
 		hl.irc.Privmsgf(message.To, message.Body)
