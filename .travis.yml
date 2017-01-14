@@ -4,6 +4,7 @@ go:
 env:
 - PATH=/home/travis/gopath/bin:$PATH
 script:
+- ! gofmt -d . | read
 - go test -v ./...
 before_deploy:
 - go get github.com/mitchellh/gox
