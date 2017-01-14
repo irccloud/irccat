@@ -53,8 +53,10 @@ func (l *TCPListener) handleConnection(conn net.Conn) {
 			break
 		}
 		msg = strings.Trim(msg, "\r\n")
-		log.Debugf("Message: %s", msg)
-		l.parseMessage(msg)
+		if len(msg) > 0 {
+			log.Debugf("Message: %s", msg)
+			l.parseMessage(msg)
+		}
 	}
 }
 
@@ -76,7 +78,7 @@ func (l *TCPListener) parseMessage(msg string) {
 				l.irc.Privmsg(target, replaceFormatting(parts[1]))
 			}
 		}
-	} else if msg[0:6] == "%TOPIC" {
+	} else if len(msg) > 7 && msg[0:6] == "%TOPIC" {
 		parts := strings.SplitN(msg, " ", 3)
 		l.irc.SendRawf("TOPIC %s :%s", parts[1], replaceFormatting(parts[2]))
 	} else {
