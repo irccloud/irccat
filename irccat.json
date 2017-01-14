@@ -15,6 +15,7 @@
     "tls_skip_verify": true,
     "nick": "irccat2",
     "realname": "IRCCat",
+    "identify_pass": "",
     "channels": ["#russtest"]
   },
   "commands": {

@@ -3,6 +3,8 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
+	"github.com/deckarep/golang-set"
+	"github.com/fsnotify/fsnotify"
 	"github.com/irccloud/irccat/httplistener"
 	"github.com/irccloud/irccat/tcplistener"
 	"github.com/juju/loggo"
@@ -16,7 +18,8 @@ import (
 var log = loggo.GetLogger("main")
 
 type IRCCat struct {
-	control_chan string
+	auth_channel string
+	channels     mapset.Set
 	auth_users   map[string]bool
 	irc          *irc.Connection
 	tcp          *tcplistener.TCPListener
@@ -36,7 +39,14 @@ func main() {
 		log.Errorf("Error reading config file - exiting. I'm looking for irccat.[json|yaml|toml|hcl] in . or /etc")
 		return
 	}
-	irccat := IRCCat{auth_users: map[string]bool{}, signals: make(chan os.Signal, 1)}
+
+	irccat := IRCCat{auth_users: map[string]bool{},
+		signals:      make(chan os.Signal, 1),
+		channels:     mapset.NewSet(),
+		auth_channel: viper.GetString("commands.auth_channel")}
+
+	viper.WatchConfig()
+	viper.OnConfigChange(irccat.handleConfigChange)
 
 	signal.Notify(irccat.signals, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	go irccat.signalHandler()
@@ -97,8 +107,35 @@ func (i *IRCCat) connectIRC() error {
 }
 
 func (i *IRCCat) handleWelcome(e *irc.Event) {
+	if viper.IsSet("irc.identify_pass") && viper.GetString("irc.identify_pass") != "" {
+		i.irc.SendRawf("NICKSERV IDENTIFY %s", viper.GetString("irc.identify_pass"))
+	}
+
 	log.Infof("Connected, joining channels...")
 	for _, channel := range viper.GetStringSlice("irc.channels") {
 		i.irc.Join(channel)
+		i.channels.Add(channel)
+	}
+}
+
+func (i *IRCCat) handleConfigChange(e fsnotify.Event) {
+	log.Infof("Reloaded config")
+
+	new_channels := mapset.NewSet()
+
+	for _, channel := range viper.GetStringSlice("irc.channels") {
+		new_channels.Add(channel)
+		if !i.channels.Contains(channel) {
+			log.Infof("Joining new channel %s", channel)
+			i.irc.Join(channel)
+			i.channels.Add(channel)
+		}
+	}
+
+	it := i.channels.Difference(new_channels).Iterator()
+	for channel := range it.C {
+		log.Infof("Leaving channel %s", channel)
+		i.irc.Part(channel.(string))
+		i.channels.Remove(channel)
 	}
 }
