@@ -7,7 +7,7 @@ before_install:
 - go get github.com/mitchellh/gox
 script:
 - go test -v ./...
-- gox -os="linux darwin" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
+- gox -os="linux darwin" -arch="amd64 386" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
 deploy:
   provider: releases
   api_key:
