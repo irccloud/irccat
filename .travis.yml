@@ -3,11 +3,10 @@ go:
 - 1.7
 env:
 - PATH=/home/travis/gopath/bin:$PATH
-before_install:
-- go get github.com/mitchellh/gox
 script:
 - go test -v ./...
 before_deploy:
+- go get github.com/mitchellh/gox
 - gox -os="linux darwin" -arch="amd64 386" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
 deploy:
   provider: releases
