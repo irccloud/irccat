@@ -13,10 +13,10 @@ Download the [latest
 release](https://github.com/irccloud/irccat/releases) from Github, put
 the [example
 config](https://github.com/irccloud/irccat/blob/master/examples/irccat.json)
-in `/etc/irccat.json` or the local directory, and run!
+in `/etc/irccat.json` or the local directory and customise it, and run!
 
 ## TCP → IRC
-Just cat a string to the TCP port - it'll be sent to the first channel
+Just cat a string to the TCP port -- it'll be sent to the first channel
 defined in your channel list:
 
     echo "Hello world" | nc -q 0 irccat-host 12345
@@ -41,6 +41,8 @@ There are also endpoints which support app-specific webhooks, currently:
 
 * Grafana alerts can be sent to `/grafana`. They will be sent to the
   channel defined in `http.listeners.grafana`.
+
+More HTTP listeners welcome!
 
 Note that there is (currently) no authentication on the HTTP endpoints,
 so you should make sure you firewall them from the world.

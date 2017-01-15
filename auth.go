@@ -22,6 +22,10 @@ func (i *IRCCat) handlePart(e *irc.Event) {
 	}
 }
 
+func (i *IRCCat) handleQuit(e *irc.Event) {
+	delete(i.auth_users, e.Nick)
+}
+
 func (i *IRCCat) handleNames(e *irc.Event) {
 	if e.Arguments[2] == i.auth_channel {
 		nicks := strings.Split(e.Arguments[3], " ")
@@ -30,5 +34,12 @@ func (i *IRCCat) handleNames(e *irc.Event) {
 			nick = strings.TrimLeft(nick, "@%+")
 			i.auth_users[nick] = true
 		}
+	}
+}
+
+func (i *IRCCat) handleNick(e *irc.Event) {
+	if i.auth_users[e.Nick] {
+		delete(i.auth_users, e.Nick)
+		i.auth_users[e.Arguments[0]] = true
 	}
 }
