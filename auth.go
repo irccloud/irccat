@@ -26,6 +26,8 @@ func (i *IRCCat) handleNames(e *irc.Event) {
 	if e.Arguments[2] == i.auth_channel {
 		nicks := strings.Split(e.Arguments[3], " ")
 		for _, nick := range nicks {
+			// TODO: this is probably not an optimal way of trimming the mode characters.
+			nick = strings.TrimLeft(nick, "@%+")
 			i.auth_users[nick] = true
 		}
 	}
