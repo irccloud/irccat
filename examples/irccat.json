@@ -6,20 +6,20 @@
     "tls_key": "",
     "tls_cert": "",
     "listeners": {
-      "grafana": "#russtest"
+      "grafana": "#channel"
     }
   },
   "irc": {
-    "server": "irc.irccloud.com:6667",
-    "tls": false,
-    "tls_skip_verify": true,
-    "nick": "irccat2",
+    "server": "irc.example.com:6697",
+    "tls": true,
+    "tls_skip_verify": false,
+    "nick": "irccat",
     "realname": "IRCCat",
     "identify_pass": "",
-    "channels": ["#russtest"]
+    "channels": ["#channel"]
   },
   "commands": {
-    "auth_channel": "#russtest",
+    "auth_channel": "#channel",
     "handler": "./examples/command_runner.py",
     "max_response_lines": 15
   }

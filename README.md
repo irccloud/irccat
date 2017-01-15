@@ -2,8 +2,18 @@
 [![Build Status](https://travis-ci.org/irccloud/irccat.svg?branch=master)](https://travis-ci.org/irccloud/irccat)
 
 A reimplementation of [irccat](https://github.com/RJ/irccat), the
-original ChatOps tool, in Go. irccat lets you easily send events
-to IRC channels from scripts and other applications.
+original ChatOps tool, in Go.
+
+irccat lets you easily send events to IRC channels from scripts and
+other applications.
+
+## Installation
+
+Download the [latest
+release](https://github.com/irccloud/irccat/releases) from Github, put
+the [example
+config](https://github.com/irccloud/irccat/blob/master/examples/irccat.json)
+in `/etc/irccat.json` or the local directory, and run!
 
 ## TCP → IRC
 Just cat a string to the TCP port - it'll be sent to the first channel
@@ -38,12 +48,12 @@ so you should make sure you firewall them from the world.
 ## IRC → Shell
 You can use irccat to execute commands from IRC:
 
-    ?commandname arguments
+    ?commandname string of arguments
 
 This will call your `commands.handler` script with the command-line
 arguments:
 
-    nickname, [channel], respond_to, commandname, [arguments]
+    nickname [channel] respond_to commandname [string of arguments]
 
 irccat will only recognise commands from users in private message if
 the user is joined to `commands.auth_channel` defined in the config.
