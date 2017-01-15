@@ -7,8 +7,9 @@ script:
 - "! gofmt -d . | read"
 - go test -v ./...
 before_deploy:
+- rm -Rf ./dist
 - go get github.com/mitchellh/gox
-- gox -os="linux darwin" -arch="amd64 386" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
+- gox -ldflags="-X main.branch=$TRAVIS_TAG -X main.revision=$TRAVIS_COMMIT" -os="linux darwin" -arch="amd64 386" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
 deploy:
   provider: releases
   skip_cleanup: true

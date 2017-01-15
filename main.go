@@ -17,6 +17,9 @@ import (
 
 var log = loggo.GetLogger("main")
 
+var branch string
+var revision string
+
 type IRCCat struct {
 	auth_channel string
 	channels     mapset.Set
@@ -28,7 +31,7 @@ type IRCCat struct {
 
 func main() {
 	loggo.ConfigureLoggers("<root>=DEBUG")
-	log.Infof("IRCCat starting...")
+	log.Infof("IRCCat %s (%s) starting...", branch, revision)
 	viper.SetConfigName("irccat")
 	viper.AddConfigPath("/etc")
 	viper.AddConfigPath(".")
