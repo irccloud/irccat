@@ -56,6 +56,7 @@ func main() {
 
 	irccat.tcp, err = tcplistener.New()
 	if err != nil {
+		log.Criticalf("Error starting TCP listener: %s", err)
 		return
 	}
 
