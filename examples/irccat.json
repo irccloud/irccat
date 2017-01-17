@@ -1,5 +1,8 @@
 {
-  "tcp_listen": ":12345",
+  "tcp": {
+    "listen": ":12345",
+    "close_after_message": false
+  },
   "http": {
     "listen": ":8045",
     "tls": false,

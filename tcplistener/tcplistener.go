@@ -20,7 +20,7 @@ func New() (*TCPListener, error) {
 	var err error
 
 	listener := TCPListener{}
-	listener.socket, err = net.Listen("tcp", viper.GetString("tcp_listen"))
+	listener.socket, err = net.Listen("tcp", viper.GetString("tcp.listen"))
 	if err != nil {
 		return nil, err
 	}
@@ -56,6 +56,9 @@ func (l *TCPListener) handleConnection(conn net.Conn) {
 		if len(msg) > 0 {
 			log.Infof("[%s] message: %s", conn.RemoteAddr(), msg)
 			l.parseMessage(msg)
+		}
+		if viper.GetBool("tcp.close_after_message") {
+			conn.Close()
 		}
 	}
 }
