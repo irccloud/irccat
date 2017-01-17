@@ -84,7 +84,6 @@ func (i *IRCCat) signalHandler() {
 
 func (i *IRCCat) connectIRC() error {
 	irccon := irc.IRC(viper.GetString("irc.nick"), viper.GetString("irc.realname"))
-	irccon.Debug = true
 	irccon.UseTLS = viper.GetBool("irc.tls")
 	if viper.GetBool("irc.tls_skip_verify") {
 		irccon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
