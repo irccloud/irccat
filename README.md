@@ -11,8 +11,7 @@ other applications.
 
 Download the [latest
 release](https://github.com/irccloud/irccat/releases) from Github, put
-the [example
-config](https://github.com/irccloud/irccat/blob/master/examples/irccat.json)
+the [example config](examples/irccat.json)
 in `/etc/irccat.json` or the local directory and customise it, and run!
 
 ## TCP → IRC
@@ -76,6 +75,10 @@ environment variables:
 
 The command handler's STDOUT will be sent back to the nick or channel
 where the command was issued.
+
+An example python command handler, which dispatches commands to
+individual shell scripts, can be found in
+[examples/command_handler.py](examples/command_handler.py).
 
 irccat will only recognise commands from users in private message if
 the user is joined to `commands.auth_channel` defined in the config.
