@@ -16,7 +16,7 @@ config](https://github.com/irccloud/irccat/blob/master/examples/irccat.json)
 in `/etc/irccat.json` or the local directory and customise it, and run!
 
 ## TCP → IRC
-Just cat a string to the TCP port -- it'll be sent to the first channel
+Just cat a string to the TCP port - it'll be sent to the first channel
 defined in your channel list:
 
     echo "Hello world" | nc irccat-host 12345
@@ -25,6 +25,14 @@ Or specify a channel or nickname to send to:
 
     echo "#channel Hello world" | nc irccat-host 12345
     echo "@nick Hello world" | nc irccat-host 12345
+
+You can also send to multiple recipients at once:
+
+    echo "#channel,@nick Hello world | nc irccat-host 12345
+
+And set a channel topic:
+
+    echo "%TOPIC #channel Channel topic" | nc irccat-host 12345
 
 IRC formatting is supported (see a full [list of
 codes](https://github.com/irccloud/irccat/blob/master/tcplistener/colours.go#L5)):
@@ -35,7 +43,7 @@ codes](https://github.com/irccloud/irccat/blob/master/tcplistener/colours.go#L5)
 There's a simple HTTP endpoint for sending messages:
 
     curl -X POST http://irccat-host:8045/send -d
-        '{"to": "#channel", "body": "Hello world"}
+        '{"to": "#channel", "body": "Hello world"}'
 
 There are also endpoints which support app-specific webhooks, currently:
 
