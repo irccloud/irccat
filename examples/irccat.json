@@ -18,7 +18,8 @@
     "nick": "irccat",
     "realname": "IRCCat",
     "identify_pass": "",
-    "channels": ["#channel"]
+    "channels": ["#channel"],
+    "keys": {"#channel": "join_key"}
   },
   "commands": {
     "auth_channel": "#channel",

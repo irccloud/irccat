@@ -12,6 +12,7 @@ import (
 	"github.com/thoj/go-ircevent"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 )
 
@@ -119,7 +120,18 @@ func (i *IRCCat) handleWelcome(e *irc.Event) {
 
 	log.Infof("Connected, joining channels...")
 	for _, channel := range viper.GetStringSlice("irc.channels") {
-		i.irc.Join(channel)
+		key_var := fmt.Sprintf("irc.keys.%s", channel)
+		if strings.ContainsAny(channel, " \t") {
+			log.Errorf("Channel name '%s' contains whitespace. Set a channel key by setting the config variable irc.keys.#channel",
+				channel)
+			continue
+		}
+
+		if viper.IsSet(key_var) {
+			i.irc.Join(channel + " " + viper.GetString(key_var))
+		} else {
+			i.irc.Join(channel)
+		}
 		i.channels.Add(channel)
 	}
 }

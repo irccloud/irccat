@@ -68,8 +68,7 @@ func (l *TCPListener) parseMessage(msg string) {
 		parts := strings.SplitN(msg, " ", 2)
 		if parts[0] == "#*" {
 			for _, channel := range channels {
-				chan_parts := strings.Split(channel, " ")
-				l.irc.Privmsg(chan_parts[0], replaceFormatting(parts[1]))
+				l.irc.Privmsg(channel, replaceFormatting(parts[1]))
 			}
 		} else {
 			targets := strings.Split(parts[0], ",")
@@ -85,8 +84,7 @@ func (l *TCPListener) parseMessage(msg string) {
 		l.irc.SendRawf("TOPIC %s :%s", parts[1], replaceFormatting(parts[2]))
 	} else {
 		if len(channels) > 0 {
-			chan_parts := strings.Split(channels[0], " ")
-			l.irc.Privmsg(chan_parts[0], replaceFormatting(msg))
+			l.irc.Privmsg(channels[0], replaceFormatting(msg))
 		}
 	}
 }
