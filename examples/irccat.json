@@ -22,7 +22,7 @@
   },
   "commands": {
     "auth_channel": "#channel",
-    "handler": "./examples/command_runner.py",
+    "handler": "./examples/command_handler.py",
     "max_response_lines": 15
   }
 }
