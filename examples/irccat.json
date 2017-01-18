@@ -1,7 +1,6 @@
 {
   "tcp": {
-    "listen": ":12345",
-    "close_after_message": false
+    "listen": ":12345"
   },
   "http": {
     "listen": ":8045",

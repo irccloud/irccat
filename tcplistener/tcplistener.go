@@ -57,10 +57,8 @@ func (l *TCPListener) handleConnection(conn net.Conn) {
 			log.Infof("[%s] message: %s", conn.RemoteAddr(), msg)
 			l.parseMessage(msg)
 		}
-		if viper.GetBool("tcp.close_after_message") {
-			conn.Close()
-		}
 	}
+	conn.Close()
 }
 
 func (l *TCPListener) parseMessage(msg string) {
