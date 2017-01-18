@@ -28,7 +28,7 @@ func (i *IRCCat) handleCommand(event *irc.Event) {
 	}
 	log.Infof("Authorised command: %s (%s) %s", event.Nick, respond_to, msg)
 
-	parts := strings.SplitN(msg, " ", 1)
+	parts := strings.SplitN(msg, " ", 2)
 
 	args := ""
 	if len(parts) > 1 {
