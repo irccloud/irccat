@@ -33,8 +33,7 @@ And set a channel topic:
 
     echo "%TOPIC #channel Channel topic" | nc irccat-host 12345
 
-IRC formatting is supported (see a full [list of
-codes](https://github.com/irccloud/irccat/blob/master/tcplistener/colours.go#L5)):
+IRC formatting is supported (see a full [list of codes](tcplistener/colours.go#L5)):
 
     echo "Status is%GREEN OK %NORMAL" | nc irccat-host 12345
 
