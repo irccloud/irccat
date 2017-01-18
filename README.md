@@ -62,6 +62,7 @@ This will call your `commands.handler` script, with the following
 environment variables:
 
 * `IRCCAT_COMMAND`: The name of the command, without the preceding `?`
+  ("commandname" in this example)
 * `IRCCAT_ARGS`: The arguments provided ("string of arguments" in this
   example)
 * `IRCCAT_NICK`: Nickname of the calling user
