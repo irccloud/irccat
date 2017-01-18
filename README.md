@@ -19,17 +19,17 @@ in `/etc/irccat.json` or the local directory and customise it, and run!
 Just cat a string to the TCP port -- it'll be sent to the first channel
 defined in your channel list:
 
-    echo "Hello world" | nc -q 0 irccat-host 12345
+    echo "Hello world" | nc irccat-host 12345
 
 Or specify a channel or nickname to send to:
 
-    echo "#channel Hello world" | nc -q 0 irccat-host 12345
-    echo "@nick Hello world" | nc -q 0 irccat-host 12345
+    echo "#channel Hello world" | nc irccat-host 12345
+    echo "@nick Hello world" | nc irccat-host 12345
 
 IRC formatting is supported (see a full [list of
 codes](https://github.com/irccloud/irccat/blob/master/tcplistener/colours.go#L5)):
 
-    echo "Status is%GREEN OK %NORMAL" | nc -q 0 irccat-host 12345a
+    echo "Status is%GREEN OK %NORMAL" | nc irccat-host 12345
 
 ## HTTP → IRC
 There's a simple HTTP endpoint for sending messages:
