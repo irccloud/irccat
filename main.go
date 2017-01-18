@@ -97,7 +97,8 @@ func (i *IRCCat) connectIRC() error {
 
 	irccon.AddCallback("001", i.handleWelcome)
 	irccon.AddCallback("PRIVMSG", func(event *irc.Event) {
-		if event.Message()[0] == '?' || event.Message()[0] == '!' {
+		msg := event.Message()
+		if (msg[0] == '?' || msg[0] == '!') && len(msg) > 1 {
 			go i.handleCommand(event)
 		}
 	})
