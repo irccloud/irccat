@@ -2,10 +2,13 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/spf13/viper"
 	"github.com/thoj/go-ircevent"
+	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 func (i *IRCCat) handleCommand(event *irc.Event) {
@@ -27,12 +30,20 @@ func (i *IRCCat) handleCommand(event *irc.Event) {
 
 	parts := strings.SplitN(msg, " ", 1)
 
-	var cmd *exec.Cmd
-	if len(parts) == 1 {
-		cmd = exec.Command(viper.GetString("commands.handler"), event.Nick, channel, respond_to, parts[0][1:])
-	} else {
-		cmd = exec.Command(viper.GetString("commands.handler"), event.Nick, channel, respond_to, parts[0][1:], parts[1])
+	args := ""
+	if len(parts) > 1 {
+		args = parts[1]
 	}
+
+	cmd := exec.Command(viper.GetString("commands.handler"))
+	cmd.Env = append(os.Environ(), fmt.Sprintf("IRCCAT_NICK=%s", event.Nick),
+		fmt.Sprintf("IRCCAT_USER=%s", event.User),
+		fmt.Sprintf("IRCCAT_HOST=%s", event.Host),
+		fmt.Sprintf("IRCCAT_CHANNEL=%s", channel),
+		fmt.Sprintf("IRCCAT_RESPOND_TO=%s", respond_to),
+		fmt.Sprintf("IRCCAT_COMMAND=%s", parts[0][1:]),
+		fmt.Sprintf("IRCCAT_ARGS=%s", args))
+
 	i.runCommand(cmd, respond_to)
 }
 
@@ -55,7 +66,13 @@ func (i *IRCCat) runCommand(cmd *exec.Cmd, respond_to string) {
 
 	for _, line := range lines[0:line_count] {
 		if line != "" {
+			// 360 bytes is the worst-case maximum size for PRIVMSG lines. Truncate the lines at that length.
+			if len(line) > 360 {
+				line = line[:360]
+			}
 			i.irc.Privmsg(respond_to, line)
 		}
+		// Pause between lines to avoid being flooded out
+		time.Sleep(250)
 	}
 }

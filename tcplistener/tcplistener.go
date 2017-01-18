@@ -29,7 +29,7 @@ func New() (*TCPListener, error) {
 }
 
 func (l *TCPListener) Run(irccon *irc.Connection) {
-	log.Infof("Listening for TCP requests on %s", viper.GetString("tcp_listen"))
+	log.Infof("Listening for TCP requests on %s", viper.GetString("tcp.listen"))
 	l.irc = irccon
 	go l.acceptConnections()
 }

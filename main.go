@@ -30,7 +30,7 @@ type IRCCat struct {
 }
 
 func main() {
-	loggo.ConfigureLoggers("<root>=DEBUG")
+	loggo.ConfigureLoggers("<root>=INFO")
 	log.Infof("IRCCat %s (%s) starting...", branch, revision)
 	viper.SetConfigName("irccat")
 	viper.AddConfigPath("/etc")

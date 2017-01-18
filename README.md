@@ -60,10 +60,22 @@ You can use irccat to execute commands from IRC:
 
     ?commandname string of arguments
 
-This will call your `commands.handler` script with the command-line
-arguments:
+This will call your `commands.handler` script, with the following
+environment variables:
 
-    nickname [channel] respond_to commandname [string of arguments]
+* `IRCCAT_COMMAND`: The name of the command, without the preceding `?`
+* `IRCCAT_ARGS`: The arguments provided ("string of arguments" in this
+  example)
+* `IRCCAT_NICK`: Nickname of the calling user
+* `IRCCAT_USER`: Username of the calling user
+* `IRCCAT_HOST`: Hostname of the calling user
+* `IRCCAT_CHANNEL`: Channel the command was issued in (may be blank if
+  issued in PM)
+* `IRCCAT_RESPOND_TO`: The nick or channel that the STDOUT of the
+  command will be sent to
+
+The command handler's STDOUT will be sent back to the nick or channel
+where the command was issued.
 
 irccat will only recognise commands from users in private message if
 the user is joined to `commands.auth_channel` defined in the config.
@@ -73,5 +85,5 @@ the user is joined to `commands.auth_channel` defined in the config.
 * HTTP endpoint handlers.
 * Doesn't support !join, !part commands, but does automatically reload
   the config and join new channels.
-* Arguments are passed individually to the command handler script,
-  rather than in one string as a single argument.
+* Arguments are passed as environment variables to the command handler
+  script, rather than as a single argument.
