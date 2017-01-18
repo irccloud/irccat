@@ -42,7 +42,8 @@ func (i *IRCCat) handleCommand(event *irc.Event) {
 		fmt.Sprintf("IRCCAT_CHANNEL=%s", channel),
 		fmt.Sprintf("IRCCAT_RESPOND_TO=%s", respond_to),
 		fmt.Sprintf("IRCCAT_COMMAND=%s", parts[0][1:]),
-		fmt.Sprintf("IRCCAT_ARGS=%s", args))
+		fmt.Sprintf("IRCCAT_ARGS=%s", args),
+		fmt.Sprintf("IRCCAT_RAW=%s", event.Raw))
 
 	i.runCommand(cmd, respond_to)
 }

@@ -71,6 +71,7 @@ environment variables:
   issued in PM)
 * `IRCCAT_RESPOND_TO`: The nick or channel that the STDOUT of the
   command will be sent to
+* `IRCCAT_RAW`: The raw IRC line received
 
 The command handler's STDOUT will be sent back to the nick or channel
 where the command was issued.
