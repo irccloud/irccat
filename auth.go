@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+func (i *IRCCat) inChannel(channel string) bool {
+	return i.channels.Contains(channel)
+}
+
 func (i *IRCCat) authorisedUser(nick string) bool {
 	_, exists := i.auth_users[nick]
 	return exists

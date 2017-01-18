@@ -15,17 +15,17 @@ func (i *IRCCat) handleCommand(event *irc.Event) {
 	msg := event.Message()
 	channel := ""
 	respond_to := event.Arguments[0]
-	if respond_to[0] != '#' {
-		respond_to = event.Nick
-	} else {
+
+	if i.inChannel(respond_to) {
 		channel = respond_to
+	} else {
+		respond_to = event.Nick
+		if !i.authorisedUser(event.Nick) {
+			log.Infof("Unauthorised command: %s (%s) %s", event.Nick, respond_to, msg)
+			return
+		}
 	}
 
-	if event.Arguments[0][0] != '#' && !i.authorisedUser(event.Nick) {
-		// Command not in a channel, or not from an authorised user
-		log.Infof("Unauthorised command: %s (%s) %s", event.Nick, respond_to, msg)
-		return
-	}
 	log.Infof("Authorised command: %s (%s) %s", event.Nick, respond_to, msg)
 
 	parts := strings.SplitN(msg, " ", 2)
