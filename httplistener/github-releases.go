@@ -49,7 +49,7 @@ func (hl *HTTPListener) githubReleasesHandler(w http.ResponseWriter, request *ht
 		msg := fmt.Sprintf("[\x02Release\x0f] \x02%s\x0f version \x02%s\x0f has been published: %s", name, release, payload.Release.Html_url)
 
 		channelKey := fmt.Sprintf("http.listeners.github-releases.%s", payload.Repository.Name)
-		channel := viper.getString(channelKey)
+		channel := viper.GetString(channelKey)
 		log.Infof("%s [%s] GitHub Release", request.RemoteAddr, channel)
 		hl.irc.Privmsgf(channel, msg)
 	}
