@@ -2,6 +2,7 @@ package tcplistener
 
 import (
 	"bufio"
+	"github.com/irccloud/irccat/dispatcher"
 	"github.com/juju/loggo"
 	"github.com/spf13/viper"
 	"github.com/thoj/go-ircevent"
@@ -54,37 +55,8 @@ func (l *TCPListener) handleConnection(conn net.Conn) {
 		}
 		msg = strings.Trim(msg, "\r\n")
 		if len(msg) > 0 {
-			log.Infof("[%s] message: %s", conn.RemoteAddr(), msg)
-			l.parseMessage(msg)
+			dispatcher.Send(l.irc, msg, log, conn.RemoteAddr().String())
 		}
 	}
 	conn.Close()
-}
-
-func (l *TCPListener) parseMessage(msg string) {
-	channels := viper.GetStringSlice("irc.channels")
-
-	if msg[0] == '#' || msg[0] == '@' {
-		parts := strings.SplitN(msg, " ", 2)
-		if parts[0] == "#*" {
-			for _, channel := range channels {
-				l.irc.Privmsg(channel, replaceFormatting(parts[1]))
-			}
-		} else {
-			targets := strings.Split(parts[0], ",")
-			for _, target := range targets {
-				if target[0] == '@' {
-					target = target[1:]
-				}
-				l.irc.Privmsg(target, replaceFormatting(parts[1]))
-			}
-		}
-	} else if len(msg) > 7 && msg[0:6] == "%TOPIC" {
-		parts := strings.SplitN(msg, " ", 3)
-		l.irc.SendRawf("TOPIC %s :%s", parts[1], replaceFormatting(parts[2]))
-	} else {
-		if len(channels) > 0 {
-			l.irc.Privmsg(channels[0], replaceFormatting(msg))
-		}
-	}
 }
