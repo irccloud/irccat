@@ -8,7 +8,11 @@
     "tls_key": "",
     "tls_cert": "",
     "listeners": {
-      "grafana": "#channel"
+      "grafana": "#channel",
+      "github-releases": {
+	    "irccat": "#irccat-dev",
+	    "go": "#go-nuts"
+	  }
     }
   },
   "irc": {

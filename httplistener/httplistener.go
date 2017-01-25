@@ -27,6 +27,10 @@ func New(irc *irc.Connection) (*HTTPListener, error) {
 		mux.HandleFunc("/grafana", hl.grafanaAlertHandler)
 	}
 
+	if viper.IsSet("http.listeners.github-releases") {
+		mux.HandleFunc("/github-releases", hl.githubReleasesHandler)
+	}
+
 	hl.http.Handler = mux
 	log.Infof("Listening for HTTP requests on %s", viper.GetString("http.listen"))
 	if viper.GetBool("http.tls") {
