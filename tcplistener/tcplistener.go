@@ -2,10 +2,10 @@ package tcplistener
 
 import (
 	"bufio"
+	"github.com/irccloud/go-ircevent"
 	"github.com/irccloud/irccat/dispatcher"
 	"github.com/juju/loggo"
 	"github.com/spf13/viper"
-	"github.com/thoj/go-ircevent"
 	"net"
 	"strings"
 )

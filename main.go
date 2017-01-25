@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"github.com/deckarep/golang-set"
 	"github.com/fsnotify/fsnotify"
+	"github.com/irccloud/go-ircevent"
 	"github.com/irccloud/irccat/httplistener"
 	"github.com/irccloud/irccat/tcplistener"
 	"github.com/juju/loggo"
 	"github.com/spf13/viper"
-	"github.com/thoj/go-ircevent"
 	"os"
 	"os/signal"
 	"strings"
@@ -85,10 +85,12 @@ func (i *IRCCat) signalHandler() {
 
 func (i *IRCCat) connectIRC() error {
 	irccon := irc.IRC(viper.GetString("irc.nick"), viper.GetString("irc.realname"))
+	irccon.RequestCaps = []string{"away-notify", "account-notify", "draft/message-tags-0.2"}
 	irccon.UseTLS = viper.GetBool("irc.tls")
 	if viper.GetBool("irc.tls_skip_verify") {
 		irccon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	}
+	irccon.Password = viper.GetString("irc.server_pass")
 
 	err := irccon.Connect(viper.GetString("irc.server"))
 	if err != nil {
@@ -115,6 +117,7 @@ func (i *IRCCat) connectIRC() error {
 }
 
 func (i *IRCCat) handleWelcome(e *irc.Event) {
+	log.Infof("Negotiated IRCv3 capabilities: %v", i.irc.AcknowledgedCaps)
 	if viper.IsSet("irc.identify_pass") && viper.GetString("irc.identify_pass") != "" {
 		i.irc.SendRawf("NICKSERV IDENTIFY %s", viper.GetString("irc.identify_pass"))
 	}
