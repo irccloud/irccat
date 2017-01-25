@@ -38,10 +38,12 @@ IRC formatting is supported (see a full [list of codes](tcplistener/colours.go#L
     echo "Status is%GREEN OK %NORMAL" | nc irccat-host 12345
 
 ## HTTP → IRC
-There's a simple HTTP endpoint for sending messages:
+There's a similar HTTP endpoint for sending messages. You can use curl in lieu
+of netcat, with "-d @-" to read POST data from stdin, like so:
 
-    curl -X POST http://irccat-host:8045/send -d
-        '{"to": "#channel", "body": "Hello world"}'
+    echo "Hello world" | curl -d @- http://irccat-host/send
+
+Everything that works via netcat also works by POST to /send.
 
 There are also endpoints which support app-specific webhooks, currently:
 

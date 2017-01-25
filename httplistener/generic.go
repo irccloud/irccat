@@ -2,29 +2,28 @@ package httplistener
 
 import (
 	"bytes"
-	"encoding/json"
+	"github.com/irccloud/irccat/dispatcher"
 	"net/http"
 )
 
-type genericMessage struct {
-	To   string
-	Body string
-}
-
+// Examples of using curl to post to /send.
+//
+// echo "Hello, world" | curl -d @- http://irccat.example.com/send
+// echo "#test,@alice Hello, world" | curl -d @- http://irccat.example.com/send
+//
 func (hl *HTTPListener) genericHandler(w http.ResponseWriter, request *http.Request) {
 	if request.Method != "POST" {
 		http.NotFound(w, request)
 		return
 	}
 
-	var message genericMessage
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(request.Body)
-	json.Unmarshal(buf.Bytes(), &message)
+	body := new(bytes.Buffer)
+	body.ReadFrom(request.Body)
+	message := body.String()
 
-	log.Infof("%s [%s] %s", request.RemoteAddr, message.To, message.Body)
-
-	if message.To != "" && message.Body != "" {
-		hl.irc.Privmsgf(message.To, message.Body)
+	if message == "" {
+		log.Warningf("%s - No message body in POST request", request.RemoteAddr)
+		return
 	}
+	dispatcher.Send(hl.irc, message, log, request.RemoteAddr)
 }
