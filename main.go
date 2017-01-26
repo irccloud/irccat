@@ -85,6 +85,7 @@ func (i *IRCCat) signalHandler() {
 
 func (i *IRCCat) connectIRC() error {
 	irccon := irc.IRC(viper.GetString("irc.nick"), viper.GetString("irc.realname"))
+	i.irc = irccon
 	irccon.RequestCaps = []string{"away-notify", "account-notify", "draft/message-tags-0.2"}
 	irccon.UseTLS = viper.GetBool("irc.tls")
 	if viper.GetBool("irc.tls_skip_verify") {
@@ -112,7 +113,6 @@ func (i *IRCCat) connectIRC() error {
 	irccon.AddCallback("KILL", i.handleQuit)
 	irccon.AddCallback("NICK", i.handleNick)
 
-	i.irc = irccon
 	return nil
 }
 
