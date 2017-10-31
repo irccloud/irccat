@@ -3,12 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/irccloud/go-ircevent"
-	"github.com/spf13/viper"
 	"os"
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/irccloud/go-ircevent"
+	"github.com/spf13/viper"
 )
 
 func (i *IRCCat) handleCommand(event *irc.Event) {
@@ -35,17 +36,20 @@ func (i *IRCCat) handleCommand(event *irc.Event) {
 		args = parts[1]
 	}
 
-	cmd := exec.Command(viper.GetString("commands.handler"))
-	cmd.Env = append(os.Environ(), fmt.Sprintf("IRCCAT_NICK=%s", event.Nick),
-		fmt.Sprintf("IRCCAT_USER=%s", event.User),
-		fmt.Sprintf("IRCCAT_HOST=%s", event.Host),
-		fmt.Sprintf("IRCCAT_CHANNEL=%s", channel),
-		fmt.Sprintf("IRCCAT_RESPOND_TO=%s", respond_to),
-		fmt.Sprintf("IRCCAT_COMMAND=%s", parts[0][1:]),
-		fmt.Sprintf("IRCCAT_ARGS=%s", args),
-		fmt.Sprintf("IRCCAT_RAW=%s", event.Raw))
+	handler := viper.GetString("commands.handler")
+	if handler != "" {
+		cmd := exec.Command(handler)
+		cmd.Env = append(os.Environ(), fmt.Sprintf("IRCCAT_NICK=%s", event.Nick),
+			fmt.Sprintf("IRCCAT_USER=%s", event.User),
+			fmt.Sprintf("IRCCAT_HOST=%s", event.Host),
+			fmt.Sprintf("IRCCAT_CHANNEL=%s", channel),
+			fmt.Sprintf("IRCCAT_RESPOND_TO=%s", respond_to),
+			fmt.Sprintf("IRCCAT_COMMAND=%s", parts[0][1:]),
+			fmt.Sprintf("IRCCAT_ARGS=%s", args),
+			fmt.Sprintf("IRCCAT_RAW=%s", event.Raw))
 
-	i.runCommand(cmd, respond_to)
+		i.runCommand(cmd, respond_to)
+	}
 }
 
 // Run a command with the output going to the nick/channel identified by respond_to
