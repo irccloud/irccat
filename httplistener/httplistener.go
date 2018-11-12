@@ -24,11 +24,13 @@ func New(irc *irc.Connection) (*HTTPListener, error) {
 	mux.HandleFunc("/send", hl.genericHandler)
 
 	if viper.IsSet("http.listeners.grafana") {
+		log.Infof("Listening for Grafana webhooks at /grafana")
 		mux.HandleFunc("/grafana", hl.grafanaAlertHandler)
 	}
 
-	if viper.IsSet("http.listeners.github-releases") {
-		mux.HandleFunc("/github-releases", hl.githubReleasesHandler)
+	if viper.IsSet("http.listeners.github") {
+		log.Infof("Listening for GitHub webhooks at /github")
+		mux.HandleFunc("/github", hl.githubHandler)
 	}
 
 	hl.http.Handler = mux

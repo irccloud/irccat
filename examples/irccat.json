@@ -9,10 +9,12 @@
     "tls_cert": "",
     "listeners": {
       "grafana": "#channel",
-      "github-releases": {
-	    "irccat": "#irccat-dev",
-	    "go": "#go-nuts"
-	  }
+      "github": {
+	"secret": "test",
+	"repositories": {
+	    "irccat": "#irccat-dev"
+	}
+       }
     }
   },
   "irc": {
