@@ -5,6 +5,7 @@ import (
 	"github.com/juju/loggo"
 	"github.com/spf13/viper"
 	"net/http"
+	"text/template"
 )
 
 var log = loggo.GetLogger("HTTPListener")
@@ -12,12 +13,14 @@ var log = loggo.GetLogger("HTTPListener")
 type HTTPListener struct {
 	http http.Server
 	irc  *irc.Connection
+	tpls *template.Template
 }
 
 func New(irc *irc.Connection) (*HTTPListener, error) {
 	hl := HTTPListener{}
 	hl.irc = irc
 	hl.http = http.Server{Addr: viper.GetString("http.listen")}
+	hl.tpls = parseTemplates()
 
 	mux := http.NewServeMux()
 

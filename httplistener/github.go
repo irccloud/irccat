@@ -2,91 +2,18 @@ package httplistener
 
 import (
 	"fmt"
-	"github.com/irccloud/irccat/util"
 	"github.com/spf13/viper"
 	"gopkg.in/go-playground/webhooks.v5/github"
 	"net/http"
 	"strings"
 )
 
-func formatRef(ref string) string {
-	parts := strings.Split(ref, "/")
-	res := ""
-	if parts[1] == "heads" {
-		res = "branch "
-	} else if parts[1] == "tags" {
-		res = "tag "
+func interestingIssueAction(action string) bool {
+	switch action {
+	case "opened", "closed", "reopened":
+		return true
 	}
-	return res + parts[2]
-}
-
-func handleRelease(payload github.ReleasePayload) ([]string, string, bool) {
-	if payload.Action != "published" {
-		return []string{""}, "", false
-	}
-
-	var release string
-	if payload.Release.Name != nil {
-		release = *payload.Release.Name
-	}
-	if release == "" {
-		release = payload.Release.TagName
-	}
-
-	msg := fmt.Sprintf("[\x02%s\x0f] release \x02%s\x0f has been published by %s: %s",
-		payload.Repository.Name, release, payload.Release.Author.Login, payload.Release.HTMLURL)
-	return []string{msg}, payload.Repository.Name, true
-}
-
-func handlePush(payload github.PushPayload) ([]string, string, bool) {
-	var msgs []string
-
-	msgs = append(msgs, fmt.Sprintf("[\x02%s\x0f] %s pushed %d new commits to %s: %s",
-		payload.Repository.Name, payload.Sender.Login, len(payload.Commits),
-		formatRef(payload.Ref), payload.Compare))
-
-	commits_shown := 0
-	for _, commit := range payload.Commits {
-		if commits_shown == 3 {
-			break
-		}
-		if !commit.Distinct {
-			continue
-		}
-		msgs = append(msgs, fmt.Sprintf("\t%s: %s", commit.Author.Username, commit.Message))
-		commits_shown++
-	}
-	return msgs, payload.Repository.Name, true
-}
-
-func handleIssue(payload github.IssuesPayload) ([]string, string, bool) {
-	msg := fmt.Sprintf("[\x02%s\x0f] %s ", payload.Repository.Name, payload.Sender.Login)
-	issue_id := fmt.Sprintf("issue #%d", payload.Issue.Number)
-
-	show := true
-	switch payload.Action {
-	case "opened":
-		msg = msg + "opened " + issue_id
-	case "closed":
-		msg = msg + "closed " + issue_id
-	default:
-		// Don't know what to do with this, so don't show it
-		show = false
-	}
-
-	msg = msg + fmt.Sprintf(": %s %s", payload.Issue.Title, payload.Issue.HTMLURL)
-	return []string{msg}, payload.Repository.Name, show
-}
-
-func handleIssueComment(payload github.IssueCommentPayload) ([]string, string, bool) {
-	if payload.Action != "created" {
-		return []string{}, payload.Repository.Name, false
-	}
-
-	msg := fmt.Sprintf("[\x02%s\x0f] %s commented on issue %d: %s",
-		payload.Repository.Name, payload.Comment.User.Login,
-		payload.Issue.Number, util.Truncate(payload.Comment.Body, 150))
-	return []string{msg}, payload.Repository.Name, true
+	return false
 }
 
 func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Request) {
@@ -101,7 +28,8 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 
 	// All valid events we want to receive need to be listed here.
 	payload, err := hook.Parse(request,
-		github.ReleaseEvent, github.PushEvent, github.IssuesEvent, github.IssueCommentEvent)
+		github.ReleaseEvent, github.PushEvent, github.IssuesEvent, github.IssueCommentEvent,
+		github.PullRequestEvent)
 
 	if err != nil {
 		log.Errorf("Error parsing github webhook: %s", err)
@@ -114,13 +42,43 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 
 	switch payload.(type) {
 	case github.ReleasePayload:
-		msgs, repo, send = handleRelease(payload.(github.ReleasePayload))
+		pl := payload.(github.ReleasePayload)
+		if pl.Action == "published" {
+			send = true
+			msgs, err = hl.renderTemplate("github.release", payload)
+			repo = pl.Repository.Name
+		}
 	case github.PushPayload:
-		msgs, repo, send = handlePush(payload.(github.PushPayload))
+		pl := payload.(github.PushPayload)
+		send = true
+		msgs, err = hl.renderTemplate("github.push", payload)
+		repo = pl.Repository.Name
 	case github.IssuesPayload:
-		msgs, repo, send = handleIssue(payload.(github.IssuesPayload))
+		pl := payload.(github.IssuesPayload)
+		if interestingIssueAction(pl.Action) {
+			send = true
+			msgs, err = hl.renderTemplate("github.issue", payload)
+			repo = pl.Repository.Name
+		}
 	case github.IssueCommentPayload:
-		msgs, repo, send = handleIssueComment(payload.(github.IssueCommentPayload))
+		pl := payload.(github.IssueCommentPayload)
+		if pl.Action == "created" {
+			send = true
+			msgs, err = hl.renderTemplate("github.issuecomment", payload)
+			repo = pl.Repository.Name
+		}
+	case github.PullRequestPayload:
+		pl := payload.(github.PullRequestPayload)
+		if interestingIssueAction(pl.Action) {
+			send = true
+			msgs, err = hl.renderTemplate("github.pullrequest", payload)
+			repo = pl.Repository.Name
+		}
+	}
+
+	if err != nil {
+		log.Errorf("Error rendering GitHub event template: %s", err)
+		return
 	}
 
 	if send {
