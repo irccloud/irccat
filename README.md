@@ -64,7 +64,7 @@ Grafana alerts can be sent to `/grafana`. They will be sent to the
 channel defined in `http.listeners.grafana`. Note that this endpoint is currently
 unauthenticated.
 
-### GitHub Webhooks
+### GitHub Webhook
 ```json
 "github": {
 	"secret": "my_secret",
@@ -86,6 +86,10 @@ repository, lowercased.
 If `http.listeners.github.default_channel` is set, received notifications will be
 sent to this channel unless overriden in `http.listeners.github.repositories`. Otherwise,
 unrecognised repositories will be ignored.
+
+GitHub can be configured to deliver webhooks to irccat on an organisation level which, combined
+with the `default_channel` setting, significantly reduces configuration effort compared to
+GitHub's old integrations system.
 
 ## IRC → Shell
 You can use irccat to execute commands from IRC:
