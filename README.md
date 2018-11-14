@@ -34,7 +34,7 @@ And set a channel topic:
 
     echo "%TOPIC #channel Channel topic" | nc irccat-host 12345
 
-IRC formatting is supported (see a full [list of codes](tcplistener/colours.go#L5)):
+IRC formatting is supported (see a full [list of codes](dispatcher/colours.go#L5)):
 
     echo "Status is%GREEN OK %NORMAL" | nc irccat-host 12345
 
@@ -44,20 +44,20 @@ HTTP listeners are configured by setting keys under `http.listeners`.
 
 ### Generic HTTP Endpoint
 ```json
-	"generic": true
+"generic": true
 ```
 
 An endpoint for sending messages similar to the TCP port. You can use curl in lieu
-of netcat, with "-d @-" to read POST data from stdin, like so:
+of netcat, with `-d @-` to read POST data from stdin, like so:
 
     echo "Hello world" | curl -d @- http://irccat-host/send
 
-Everything that works via netcat also works by POST to /send. Note that this endpoint
+Everything that works via netcat also works by POST to `/send`. Note that this endpoint
 is unauthenticated.
 
 ### Grafana Webhook
 ```json
-	"grafana": "#channel"
+"grafana": "#channel"
 ```
 
 Grafana alerts can be sent to `/grafana`. They will be sent to the
@@ -66,13 +66,13 @@ unauthenticated.
 
 ### GitHub Webhooks
 ```json
-	"github": {
-		"secret": "my_secret",
-		"default_channel": "#channel",
-		"repositories": {
-		    "irccat": "#irccat-dev"
-		}
-       	}
+"github": {
+	"secret": "my_secret",
+	"default_channel": "#channel",
+	"repositories": {
+	    "irccat": "#irccat-dev"
+	}
+}
 ```
 
 Receives GitHub webhooks at `/github`. Currently supports issues, issue comments,
