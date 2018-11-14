@@ -86,9 +86,9 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 
 	if send {
 		repo = strings.ToLower(repo)
-		channel := viper.GetString(fmt.Sprintf("http.listeners.github.repositories.%s", repo))
+		channel := viper.GetString("http.listeners.github.default_channel")
 		if channel == "" {
-			channel = viper.GetString("http.listeners.github.default_channel")
+			channel = viper.GetString(fmt.Sprintf("http.listeners.github.repositories.%s", repo))
 		}
 
 		if channel == "" {
