@@ -34,7 +34,8 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 		github.PullRequestEvent)
 
 	if err != nil {
-		log.Errorf("Error parsing github webhook: %s", err)
+		// This usually happens because we've received an event we don't need to handle.
+		log.Warnf("Error parsing github webhook: %s", err)
 		return
 	}
 
