@@ -9,17 +9,17 @@ script:
 before_deploy:
 - rm -Rf ./dist
 - go get github.com/mitchellh/gox
-- gox -ldflags="-X main.branch=$TRAVIS_TAG -X main.revision=$TRAVIS_COMMIT" -os="linux darwin" -arch="amd64 386" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
+- gox -ldflags="-X main.branch=$TRAVIS_TAG -X main.revision=$TRAVIS_COMMIT" -os="linux
+  darwin" -arch="amd64 386" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
 deploy:
   provider: releases
-  skip_cleanup: true
   api_key:
-    secure: LguVQAhSM/EYxWA/V2R3MWLZRe4/fYHwmtmocd2Eiu3KJ/hU++7+qp2Vj1P/bnPVF0fs7PWZPprhCB5FWOiYqqeJcKjRGXdQXBlXLS+DGLYi8gdPFWra4Iil2sDS8AxxxL9/WnjsDpBJmBmf0XO/EyDgKh/E9fNc+IbntJNkR7HGbcpBNl6XPOpxxxKRfAuNwl0s9jt8FxY8SHQoOcFbsT0NpdkOCWVAGq5nSsAIavAoA2XtNE17ZNFgfMEFAD03nlgU29IdIFExTlau4vpzHYq9xcVj1b3+xUKc9sz9DCL4lWk6r6a0Cobyj2KIFd2tJzsXXAipRF4Aj7i3sSR2OU6Z3cs0o3WWMQMGi8XblaTINuMBMWM25mCfw8BldTvcxdyj4fLU5k6i9bB4OWxhW+kcQqpC1GQyZn+0JdOZjlyXflksKPpf6nk61l5zvf26no5eDMEWS4ODcNJUxVsGn6DhnSjiMjnPQZ1bstW1//BbcejlzugEtOO8BA14njfY6idcZfuwq6iCSlT3HniVRl99anNImP9Ok5GjCwJa2Slu3dK5jrvWB5/dT4nVcSVL0krDt6926YNA+9IONjJnUUoYzsSTRTFU07KDn1/isP8Ki7q/0KJvdRmXK3dp8VSfaTAOCPY4R0Gh0LwI5lS1TYdRXyvYgdG3j0f2hCfLnsU=
-  file:
+    secure: AXhg+m8loR8mQZMK1T+rWvK4yiOmfdUvGFl8MIjwINaSh7NXMR2mqRB1Kx0UgEAdYhkkevp9NjJscedha9vQmPmiTxImn4Mr3S1hfLBfWKjmTkpe2itSARJLwzpv09skay1q7dbBpZ7t2Xwe4HExuX1vlkU6Kixv3Z+GlUgkmH3c1db4h01ANLbCdabtBQaqjfh7OMteNg2fBAKxANfoNPAVzD8PzIcm9ffvU9BEW6UKVMIxc5yygVBlaGqyu6JcKvWRaT9JfDF1G0iJVawy1jSfhlMUeRfA2aDEE+ne1meLp6KD0JqocXy+t1fZejlAcYVJigmdeMpQXsfKgXtQ1hLE/6wIqP3CzBX4/6x2FDHh2Mb9IfjKjH5mlUvk7vQpbfmN7k04YXuugczCZS7fm3pTPkZgnLNrdCx6miAi/G84ssO3vaMpW3uYOlcmsESBAYNkVFLzkw4ggfwBFWkK3s81CxUaUxxH15vuvYLejvBWkFgCDTLq2Kmn1bbts9xx9v1hGtEtqLwYq1HVMXxs507zJqpvQKVD8DsWC6kqp7+dzIGNEi0ixqM3lZVKU5iqC8mXkw7HMZZ3jOE+YbTFOxrMqJrbS5z9eFSe37Wz7cFfpb4Z7YXSy3E8JMKMcu9L8mxtHFOm9AUC1v3ySMz9zI3kqy+6zs2Axb+LjLSzPBw=
+  file: 
     - dist/linux_amd64_irccat
     - dist/linux_386_irccat
     - dist/darwin_amd64_irccat
     - dist/darwin_386_irccat
+  skip_cleanup: true
   on:
-    repo: irccloud/irccat
     tags: true
