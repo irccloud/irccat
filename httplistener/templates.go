@@ -36,6 +36,9 @@ func refType(ref string) string {
 }
 
 func truncateSha(sha string) string {
+	if len(sha) < 8 {
+		return ""
+	}
 	return sha[len(sha)-7:]
 }
 
@@ -99,7 +102,7 @@ func commitLimit(pl github.PushPayload, length int) []Commit {
 		if !c.Distinct {
 			continue
 		}
-		res = append(res, Commit{Message: c.Message, Username: c.Author.Username, Sha: c.Sha})
+		res = append(res, Commit{Message: c.Message, Username: c.Author.Username, Sha: c.ID})
 		i += 1
 		if i == length {
 			break
