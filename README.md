@@ -39,22 +39,53 @@ IRC formatting is supported (see a full [list of codes](tcplistener/colours.go#L
     echo "Status is%GREEN OK %NORMAL" | nc irccat-host 12345
 
 ## HTTP → IRC
-There's a similar HTTP endpoint for sending messages. You can use curl in lieu
+
+HTTP listeners are configured by setting keys under `http.listeners`.
+
+### Generic HTTP Endpoint
+```json
+	"generic": true
+```
+
+An endpoint for sending messages similar to the TCP port. You can use curl in lieu
 of netcat, with "-d @-" to read POST data from stdin, like so:
 
     echo "Hello world" | curl -d @- http://irccat-host/send
 
-Everything that works via netcat also works by POST to /send.
+Everything that works via netcat also works by POST to /send. Note that this endpoint
+is unauthenticated.
 
-There are also endpoints which support app-specific webhooks, currently:
+### Grafana Webhook
+```json
+	"grafana": "#channel"
+```
 
-* Grafana alerts can be sent to `/grafana`. They will be sent to the
-  channel defined in `http.listeners.grafana`.
+Grafana alerts can be sent to `/grafana`. They will be sent to the
+channel defined in `http.listeners.grafana`. Note that this endpoint is currently
+unauthenticated.
 
-More HTTP listeners welcome!
+### GitHub Webhooks
+```json
+	"github": {
+		"secret": "my_secret",
+		"default_channel": "#channel",
+		"repositories": {
+		    "irccat": "#irccat-dev"
+		}
+       	}
+```
 
-Note that there is (currently) no authentication on the HTTP endpoints,
-so you should make sure you firewall them from the world.
+Receives GitHub webhooks at `/github`. Currently supports issues, issue comments,
+pull requests, pushes, and releases. The webhook needs to be configured to post data
+as JSON, not as form-encoded.
+
+The destination channel for notifications from each respository is set in
+`http.listeners.github.repositories.repo_name`, where `repo_name` is the name of the
+repository, lowercased.
+
+If `http.listeners.github.default_channel` is set, received notifications will be
+sent to this channel unless overriden in `http.listeners.github.repositories`. Otherwise,
+unrecognised repositories will be ignored.
 
 ## IRC → Shell
 You can use irccat to execute commands from IRC:

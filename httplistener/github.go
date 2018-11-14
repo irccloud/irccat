@@ -21,7 +21,9 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 		http.NotFound(w, request)
 		return
 	}
-	hook, err := github.New() // TODO: webhook secret
+
+	hook, err := github.New(github.Options.Secret(viper.GetString("http.listeners.github.secret")))
+
 	if err != nil {
 		return
 	}
@@ -83,12 +85,16 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 
 	if send {
 		repo = strings.ToLower(repo)
-		channelKey := fmt.Sprintf("http.listeners.github.repositories.%s", repo)
-		channel := viper.GetString(channelKey)
+		channel := viper.GetString(fmt.Sprintf("http.listeners.github.repositories.%s", repo))
+		if channel == "" {
+			channel = viper.GetString("http.listeners.github.default_channel")
+		}
+
 		if channel == "" {
 			log.Infof("%s GitHub event for unrecognised repository %s", request.RemoteAddr, repo)
 			return
 		}
+
 		log.Infof("%s [%s -> %s] GitHub event received", request.RemoteAddr, repo, channel)
 		for _, msg := range msgs {
 			hl.irc.Privmsgf(channel, msg)

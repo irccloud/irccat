@@ -21,10 +21,14 @@ func New(irc *irc.Connection) (*HTTPListener, error) {
 	hl.irc = irc
 	hl.http = http.Server{Addr: viper.GetString("http.listen")}
 	hl.tpls = parseTemplates()
+	log.Infof("Listening for HTTP requests on %s", viper.GetString("http.listen"))
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/send", hl.genericHandler)
+	if viper.GetBool("http.listeners.generic") {
+		log.Infof("Listening for HTTP POST requests at /send")
+		mux.HandleFunc("/send", hl.genericHandler)
+	}
 
 	if viper.IsSet("http.listeners.grafana") {
 		log.Infof("Listening for Grafana webhooks at /grafana")
@@ -37,7 +41,6 @@ func New(irc *irc.Connection) (*HTTPListener, error) {
 	}
 
 	hl.http.Handler = mux
-	log.Infof("Listening for HTTP requests on %s", viper.GetString("http.listen"))
 	if viper.GetBool("http.tls") {
 		go hl.http.ListenAndServeTLS(viper.GetString("http.tls_cert"), viper.GetString("http.tls_key"))
 	} else {

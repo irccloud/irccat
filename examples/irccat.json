@@ -8,9 +8,11 @@
     "tls_key": "",
     "tls_cert": "",
     "listeners": {
+      "generic": true,
       "grafana": "#channel",
       "github": {
-	"secret": "test",
+	"secret": "my_secret",
+	"default_channel": "#irccat-dev",
 	"repositories": {
 	    "irccat": "#irccat-dev"
 	}
