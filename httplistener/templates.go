@@ -11,9 +11,9 @@ import (
 
 var defaultTemplates = map[string]string{
 	"github.release": "[{{b .Repository.Name}}] release {{h .Release.TagName}} has been published by {{g .Release.Author.Login}}: {{.Release.HTMLURL}}",
-	"github.push": `[{{b .Repository.Name}}] {{g .Sender.Login}} pushed {{.Commits|len}} commits to {{.Ref|refType}} {{.Ref|refName|h}}: {{.Compare}}
+	"github.push": `[{{b .Repository.Name}}] {{g .Sender.Login}} {{if .Forced}}force-{{end}}pushed {{if .Commits}}{{.Commits|len}} commit{{if .Commits|len|lt 1}}s{{end}} to {{end}}{{.Ref|refType}} {{.Ref|refName|h}}: {{.Compare}}
 {{range commitLimit . 3}}
-	{{g .Username}} ({{.Sha|truncateSha|h}}): {{.Message}}
+	• {{g .Username}} ({{.Sha|truncateSha|h}}): {{trunc .Message 150}}
 {{end}}`,
 	"github.issue":        "[{{b .Repository.Name}}] {{g .Sender.Login}} {{.Action}} issue #{{.Issue.Number}}: {{.Issue.Title}} {{.Issue.HTMLURL}}",
 	"github.issuecomment": "[{{b .Repository.Name}}] {{g .Comment.User.Login}} commented on issue #{{.Issue.Number}}: {{trunc .Comment.Body 150}} {{.Issue.HTMLURL}}",

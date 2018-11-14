@@ -1,12 +1,19 @@
 package util
 
 import (
+	"strings"
 	"unicode"
 )
 
 func Truncate(in string, length int) string {
+	parts := strings.Split(in, "\n")
+	in = parts[0]
 	if len(in) <= length {
-		return in
+		if len(parts) > 1 {
+			return in + "…"
+		} else {
+			return in
+		}
 	}
 
 	runes := []rune(in)
