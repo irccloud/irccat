@@ -84,7 +84,9 @@ func (hl *HTTPListener) renderTemplate(tpl_name string, data interface{}) ([]str
 		return []string{}, errors.New("Nonexistent template")
 	}
 	t.Execute(&out, data)
-	return strings.Split(out.String(), "\n"), nil
+	// The \r character is also a delimiter in IRC so strip it out.
+	outStr := strings.Replace(out.String(), "\r", "", -1)
+	return strings.Split(outStr, "\n"), nil
 }
 
 // We need this additional struct and function because the GitHub webhook package represents
