@@ -26,6 +26,8 @@
     "nick": "irccat",
     "realname": "IRCCat",
     "identify_pass": "",
+    "sasl_login": "",
+    "sasl_pass": "",
     "channels": ["#channel"],
     "keys": {"#channel": "join_key"}
   },
