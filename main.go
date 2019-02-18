@@ -86,8 +86,18 @@ func (i *IRCCat) signalHandler() {
 func (i *IRCCat) connectIRC() error {
 	irccon := irc.IRC(viper.GetString("irc.nick"), viper.GetString("irc.realname"))
 	i.irc = irccon
-	irccon.RequestCaps = []string{"away-notify", "account-notify", "draft/message-tags-0.2"}
+	// requesting any caps breaks SASL
+	// irccon.RequestCaps = []string{"away-notify", "account-notify", "draft/message-tags-0.2"}
 	irccon.UseTLS = viper.GetBool("irc.tls")
+	if viper.IsSet("irc.sasl_pass") && viper.GetString("irc.sasl_pass") != "" {
+		if viper.IsSet("irc.sasl_login") && viper.GetString("irc.sasl_login") != "" {
+			irccon.SASLLogin = viper.GetString("irc.sasl_login")
+		} else {
+			irccon.SASLLogin = viper.GetString("irc.nick")
+		}
+		irccon.SASLPassword = viper.GetString("irc.sasl_pass")
+		irccon.UseSASL = true
+	}
 	if viper.GetBool("irc.tls_skip_verify") {
 		irccon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	}
