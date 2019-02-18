@@ -27,7 +27,8 @@
     "realname": "IRCCat",
     "identify_pass": "",
     "channels": ["#channel"],
-    "keys": {"#channel": "join_key"}
+    "keys": {"#channel": "join_key"},
+    "debug": false
   },
   "commands": {
     "auth_channel": "#channel",
