@@ -79,12 +79,12 @@ Receives GitHub webhooks at `/github`. Currently supports issues, issue comments
 pull requests, pushes, and releases. The webhook needs to be configured to post data
 as JSON, not as form-encoded.
 
-The destination channel for notifications from each respository is set in
+The destination channel for notifications from each repository is set in
 `http.listeners.github.repositories.repo_name`, where `repo_name` is the name of the
 repository, lowercased.
 
 If `http.listeners.github.default_channel` is set, received notifications will be
-sent to this channel unless overriden in `http.listeners.github.repositories`. Otherwise,
+sent to this channel unless overridden in `http.listeners.github.repositories`. Otherwise,
 unrecognised repositories will be ignored.
 
 GitHub can be configured to deliver webhooks to irccat on an organisation level which, combined
