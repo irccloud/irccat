@@ -8,11 +8,14 @@ import (
 	"strings"
 )
 
-func (i *IRCCat) connectIRC() error {
+func (i *IRCCat) connectIRC(debug bool) error {
 	irccon := irc.IRC(viper.GetString("irc.nick"), viper.GetString("irc.realname"))
 	i.irc = irccon
+
+	irccon.Debug = debug
 	irccon.RequestCaps = []string{"away-notify", "account-notify", "draft/message-tags-0.2"}
 	irccon.UseTLS = viper.GetBool("irc.tls")
+
 	if viper.IsSet("irc.sasl_pass") && viper.GetString("irc.sasl_pass") != "" {
 		if viper.IsSet("irc.sasl_login") && viper.GetString("irc.sasl_login") != "" {
 			irccon.SASLLogin = viper.GetString("irc.sasl_login")
@@ -22,6 +25,7 @@ func (i *IRCCat) connectIRC() error {
 		irccon.SASLPassword = viper.GetString("irc.sasl_pass")
 		irccon.UseSASL = true
 	}
+
 	if viper.GetBool("irc.tls_skip_verify") {
 		irccon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/deckarep/golang-set"
 	"github.com/fsnotify/fsnotify"
@@ -29,6 +30,9 @@ type IRCCat struct {
 }
 
 func main() {
+	debug := flag.Bool("debug", false, "Print raw IRC lines")
+	flag.Parse()
+
 	loggo.ConfigureLoggers("<root>=INFO")
 	log.Infof("IRCCat %s (%s) starting...", branch, revision)
 	viper.SetConfigName("irccat")
@@ -59,7 +63,7 @@ func main() {
 		return
 	}
 
-	err = irccat.connectIRC()
+	err = irccat.connectIRC(*debug)
 
 	if err != nil {
 		log.Criticalf("Error connecting to IRC server: %s", err)
