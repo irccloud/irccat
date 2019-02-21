@@ -34,8 +34,12 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 		github.PullRequestEvent)
 
 	if err != nil {
-		// This usually happens because we've received an event we don't need to handle.
+		if err == github.ErrEventNotFound {
+			// We've received an event we don't need to handle, return normally
+			return
+		}
 		log.Warningf("Error parsing github webhook: %s", err)
+		http.Error(w, "Error processing webhook", http.StatusBadRequest)
 		return
 	}
 
