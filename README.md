@@ -1,5 +1,5 @@
 # irccat
-[![Build Status](https://travis-ci.org/irccloud/irccat.svg?branch=master)](https://travis-ci.org/irccloud/irccat)
+[![Build Status](https://travis-ci.org/irccloud/irccat.svg?branch=master)](https://travis-ci.org/irccloud/irccat)<a href="https://www.irccloud.com/invite?channel=%23irccat&amp;hostname=irc.irccloud.com&amp;port=6697&amp;ssl=1" target="_blank"><img src="https://img.shields.io/badge/IRC-%23irccat-1e72ff.svg?style=flat"  height="20"></a>
 
 A reimplementation of [irccat](https://github.com/RJ/irccat), the
 original ChatOps tool, in Go.
