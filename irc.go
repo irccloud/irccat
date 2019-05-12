@@ -6,6 +6,7 @@ import (
 	"github.com/irccloud/go-ircevent"
 	"github.com/spf13/viper"
 	"strings"
+	"time"
 )
 
 func (i *IRCCat) connectIRC(debug bool) error {
@@ -13,6 +14,7 @@ func (i *IRCCat) connectIRC(debug bool) error {
 	i.irc = irccon
 
 	irccon.Debug = debug
+	irccon.Timeout = time.Second * 15
 	irccon.RequestCaps = []string{"away-notify", "account-notify", "draft/message-tags-0.2"}
 	irccon.UseTLS = viper.GetBool("irc.tls")
 
