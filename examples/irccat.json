@@ -25,6 +25,7 @@
     "tls_skip_verify": false,
     "nick": "irccat",
     "realname": "IRCCat",
+    "server_pass": "",
     "identify_pass": "",
     "sasl_login": "",
     "sasl_pass": "",
