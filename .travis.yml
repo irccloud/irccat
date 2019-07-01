@@ -10,8 +10,8 @@ script:
 before_deploy:
 - rm -Rf ./dist
 - go get github.com/mitchellh/gox
-- gox -ldflags="-X main.branch=$TRAVIS_TAG -X main.revision=$TRAVIS_COMMIT" -os="linux
-  darwin" -arch="amd64 386 arm" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
+- gox -ldflags="-X main.branch=$TRAVIS_TAG -X main.revision=$TRAVIS_COMMIT" -osarch="linux/amd64 
+  linux/386 linux/arm darwin/amd64 darwin/386" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
 deploy:
   provider: releases
   api_key:
@@ -19,9 +19,9 @@ deploy:
   file: 
     - dist/linux_amd64_irccat
     - dist/linux_386_irccat
+    - dist/linux_arm_irccat
     - dist/darwin_amd64_irccat
     - dist/darwin_386_irccat
-    - dist/darwin_arm_irccat
   skip_cleanup: true
   on:
     tags: true
