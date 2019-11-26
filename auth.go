@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/irccloud/go-ircevent"
+	"github.com/thoj/go-ircevent"
 	"strings"
 )
 

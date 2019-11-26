@@ -1,9 +1,9 @@
 package httplistener
 
 import (
-	"github.com/irccloud/go-ircevent"
 	"github.com/juju/loggo"
 	"github.com/spf13/viper"
+	"github.com/thoj/go-ircevent"
 	"net/http"
 	"text/template"
 )

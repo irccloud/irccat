@@ -3,8 +3,8 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/irccloud/go-ircevent"
 	"github.com/spf13/viper"
+	"github.com/thoj/go-ircevent"
 	"strings"
 	"time"
 )

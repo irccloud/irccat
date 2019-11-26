@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/irccloud/go-ircevent"
 	"github.com/spf13/viper"
+	"github.com/thoj/go-ircevent"
 )
 
 func (i *IRCCat) handleCommand(event *irc.Event) {
