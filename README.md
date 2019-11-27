@@ -91,6 +91,13 @@ GitHub can be configured to deliver webhooks to irccat on an organisation level 
 with the `default_channel` setting, significantly reduces configuration effort compared to
 GitHub's old integrations system.
 
+### Prometheus Alertmanager Webhook
+```json
+"prometheus": "#channel"
+```
+
+Receives [Prometheus Alertmanager webhooks](https://prometheus.io/docs/alerting/configuration/#webhook_config) at `/prometheus`. They will be sent to the channel defined in `http.listeners.prometheus`. Note that this endpoint is unauthenticated.
+
 ## IRC → Shell
 You can use irccat to execute commands from IRC:
 

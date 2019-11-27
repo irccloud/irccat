@@ -1,0 +1,26 @@
+{
+  "version": "4",
+  "groupKey": "group",
+  "status": "firing",
+  "receiver": "irccat",
+  "groupLabels": {},
+  "commonLabels": {},
+  "commonAnnotations": {},
+  "externalURL": "http://alertmanager:9093",
+  "alerts": [
+    {
+      "status": "firing",
+      "labels": {
+	"alertname": "Test Alert",
+	"instance": "test.example.com",
+	"job": "jobname"
+      },
+      "annotations": {
+	"summary": "Alert summary"
+      },
+      "startsAt": "2019-11-10T23:20:50.52Z",
+      "endsAt": "2019-11-10T23:20:50.52Z",
+      "generatorURL": "http://prometheus:9090/graph?"
+    }
+  ]
+}
