@@ -31,7 +31,7 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 	// All valid events we want to receive need to be listed here.
 	payload, err := hook.Parse(request,
 		github.ReleaseEvent, github.PushEvent, github.IssuesEvent, github.IssueCommentEvent,
-		github.PullRequestEvent)
+		github.PullRequestEvent, github.CheckSuiteEvent)
 
 	if err != nil {
 		if err == github.ErrEventNotFound {
@@ -79,6 +79,13 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 		if interestingIssueAction(pl.Action) {
 			send = true
 			msgs, err = hl.renderTemplate("github.pullrequest", payload)
+			repo = pl.Repository.Name
+		}
+	case github.CheckSuitePayload:
+		pl := payload.(github.CheckSuitePayload)
+		if pl.CheckSuite.Status == "completed" && pl.CheckSuite.Conclusion == "failure" {
+			send = true
+			msgs, err = hl.renderTemplate("github.checksuite", payload)
 			repo = pl.Repository.Name
 		}
 	}
