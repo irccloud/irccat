@@ -14,6 +14,8 @@ release](https://github.com/irccloud/irccat/releases) from Github, put
 the [example config](examples/irccat.json)
 in `/etc/irccat.json` or the local directory and customise it, and run!
 
+A Docker container is also [provided on Docker Hub](https://hub.docker.com/repository/docker/irccloud/irccat).
+
 ## TCP → IRC
 
 Just cat a string to the TCP port - it'll be sent to the first channel
