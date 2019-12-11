@@ -25,7 +25,7 @@ func New(irc *irc.Connection) (*HTTPListener, error) {
 
 	mux := http.NewServeMux()
 
-	if viper.GetBool("http.listeners.generic") {
+	if viper.IsSet("http.listeners.generic") {
 		log.Infof("Listening for HTTP POST requests at /send")
 		mux.HandleFunc("/send", hl.genericHandler)
 	}

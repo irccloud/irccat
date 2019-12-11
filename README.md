@@ -54,8 +54,18 @@ of netcat, with `-d @-` to read POST data from stdin, like so:
 
     echo "Hello world" | curl -d @- http://irccat-host/send
 
-Everything that works via netcat also works by POST to `/send`. Note that this endpoint
-is unauthenticated.
+### Generic HTTP Endpoint with authentication
+
+```json
+"generic": {
+    "secret": "my_secret"
+}
+```
+
+Adding an optional secret allows you to require a single secret token before sending
+messages to the specified channels. (Using HTTPS is recommended to ensure key security)
+
+    echo "Hello world" | curl -H "Authorization: Bearer my_secret" -d @- http://irccat-host/send
 
 ### Grafana Webhook
 ```json
