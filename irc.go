@@ -27,14 +27,20 @@ func (i *IRCCat) connectIRC(debug bool) error {
 		irccon.SASLPassword = viper.GetString("irc.sasl_pass")
 		irccon.UseSASL = true
 	}
+	if viper.GetBool("irc.sasl_external") {
+		irccon.SASLMech = "EXTERNAL"
+		irccon.UseSASL = true
+	}
 
 	if viper.GetBool("irc.tls_skip_verify") {
 		irccon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	}
+	if err := addClientCert(irccon); err != nil {
+		return err
+	}
 	irccon.Password = viper.GetString("irc.server_pass")
 
-	err := irccon.Connect(viper.GetString("irc.server"))
-	if err != nil {
+	if err := irccon.Connect(viper.GetString("irc.server")); err != nil {
 		return err
 	}
 
@@ -78,4 +84,22 @@ func (i *IRCCat) handleWelcome(e *irc.Event) {
 		}
 		i.channels.Add(channel)
 	}
+}
+
+func addClientCert(irccon *irc.Connection) error {
+	certFile := viper.GetString("irc.tls_client_cert") // "" when unset
+	if certFile == "" {
+		return nil
+	}
+	keyFile := certFile
+	if k := viper.GetString("irc.tls_client_key"); k != "" {
+		keyFile = k
+	}
+	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+	if err != nil {
+		return err
+	}
+	existing := irccon.TLSConfig.Certificates
+	irccon.TLSConfig.Certificates = append(existing, cert)
+	return nil
 }
