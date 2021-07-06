@@ -1,0 +1,13 @@
+POST /send HTTP/1.1
+Host: localhost:18045
+User-Agent: curl/7.76.1
+Accept: */*
+Content-Length: 207
+Content-Type: multipart/form-data; boundary=------------------------5cbcc75e58188254
+
+--------------------------5cbcc75e58188254
+Content-Disposition: form-data; name="foo"; filename="-"
+Content-Transfer-Encoding: quoted-printable
+
+%BOLDhw=0A
+--------------------------5cbcc75e58188254--

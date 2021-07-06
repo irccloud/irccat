@@ -1,0 +1,8 @@
+POST /send HTTP/1.1
+Host: localhost:18045
+User-Agent: curl/7.76.1
+Accept: */*
+Content-Type: application/octet-stream
+Content-Length: 8
+
+%BOLDhw

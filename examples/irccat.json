@@ -8,7 +8,10 @@
     "tls_key": "",
     "tls_cert": "",
     "listeners": {
-      "generic": true,
+      "generic": {
+        "secret": "",
+        "strict": false
+      },
       "grafana": "#channel",
       "github": {
 	"secret": "my_secret",
