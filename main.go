@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"time"
+
 	"github.com/deckarep/golang-set"
 	"github.com/fsnotify/fsnotify"
 	"github.com/irccloud/irccat/httplistener"
@@ -13,6 +15,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"github.com/irccloud/irccat/util"
 )
 
 var log = loggo.GetLogger("main")
@@ -104,5 +107,18 @@ func (i *IRCCat) handleConfigChange(e fsnotify.Event) {
 		log.Infof("Leaving channel %s", channel)
 		i.irc.Part(channel.(string))
 		i.channels.Remove(channel)
+	}
+}
+
+// handlePong writes the current time in UNIX seconds to a designated file.
+// Opt in by specifying a file path for config item irc.health_file.
+func (i *IRCCat) handlePong(e *irc.Event) {
+	healthFile := viper.GetString("irc.health_file")
+	if healthFile == "" {
+		return
+	}
+	err:= util.WriteTimestamp(healthFile, time.Now())
+	if err != nil {
+		log.Criticalf("%s", err)
 	}
 }
