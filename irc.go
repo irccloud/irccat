@@ -10,7 +10,9 @@ import (
 )
 
 func (i *IRCCat) connectIRC(debug bool) error {
-	irccon := irc.IRC(viper.GetString("irc.nick"), viper.GetString("irc.realname"))
+	viper.SetDefault("irc.user", viper.GetString("irc.nick"))
+	irccon := irc.IRC(viper.GetString("irc.nick"), viper.GetString("irc.user"))
+	irccon.RealName = viper.GetString("irc.realname")
 	i.irc = irccon
 
 	irccon.Debug = debug
