@@ -14,7 +14,7 @@ release](https://github.com/irccloud/irccat/releases) from Github, put
 the [example config](examples/irccat.json)
 in `/etc/irccat.json` or the local directory and customise it, and run!
 
-A Docker container is also [provided on Docker Hub](https://hub.docker.com/r/irccloud/irccat).
+A Docker container is also [provided](https://github.com/irccloud/irccat/pkgs/container/irccat) at `ghcr.io/irccloud/irccat`.
 
 ## TCP → IRC
 
