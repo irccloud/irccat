@@ -38,7 +38,7 @@ jobs:
       - name: Build
         run: |
           go get github.com/mitchellh/gox
-          gox -ldflags="-X main.branch=${{github.ref_name}} -X main.revision=${{github.sha}}" -osarch="linux/amd64 linux/386 linux/arm darwin/amd64 darwin/386" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
+          gox -ldflags="-X main.branch=${{github.ref_name}} -X main.revision=${{github.sha}}" -osarch="linux/amd64 linux/arm darwin/amd64" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
       - name: Build and push Dockerfile
         id: docker_build
         uses: docker/build-push-action@v2
@@ -53,7 +53,5 @@ jobs:
           prerelease: false
           files: |
             dist/linux_amd64_irccat
-            dist/linux_386_irccat
             dist/linux_arm_irccat
             dist/darwin_amd64_irccat
-            dist/darwin_386_irccat
