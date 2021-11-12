@@ -1,0 +1,59 @@
+---
+name: "Build Release"
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  tagged-release:
+    name: "Build Release"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: |
+            ghcr.io/irccloud/irccat
+          tags: |
+            type=semver,pattern={{version}}
+            type=sha
+      - uses: actions/setup-go@v2
+        with:
+          go-version: "^1.17.3"
+      - name: Check Formatting
+        run: gofmt -d -e .
+      - name: Tests
+        run: go test -v ./...
+      - name: Build
+        run: |
+          go get github.com/mitchellh/gox
+          gox -ldflags="-X main.branch=${{github.ref_name}} -X main.revision=${{github.sha}}" -osarch="linux/amd64 linux/386 linux/arm darwin/amd64 darwin/386" -output="dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
+      - name: Build and push Dockerfile
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            dist/linux_amd64_irccat
+            dist/linux_386_irccat
+            dist/linux_arm_irccat
+            dist/darwin_amd64_irccat
+            dist/darwin_386_irccat

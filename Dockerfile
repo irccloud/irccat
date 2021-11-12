@@ -11,7 +11,7 @@
 # (This will also expose the default ports: 12345 and 8045.)
 
 # Step one: fetch deps and build
-FROM golang:latest AS build
+FROM golang:1.17.3 AS build
 
 ADD . /go/src/github.com/irccloud/irccat
 WORKDIR /go/src/github.com/irccloud/irccat
