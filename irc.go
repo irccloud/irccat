@@ -36,7 +36,11 @@ func (i *IRCCat) connectIRC(debug bool) error {
 
 	if viper.GetBool("irc.tls_skip_verify") {
 		irccon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	} else {
+		server_parts := strings.Split(viper.GetString("irc.server"), ":")
+		irccon.TLSConfig = &tls.Config{ServerName: server_parts[0]}
 	}
+
 	if err := addClientCert(irccon); err != nil {
 		return err
 	}
