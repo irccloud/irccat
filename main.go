@@ -12,6 +12,7 @@ import (
 	"github.com/thoj/go-ircevent"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 )
 
@@ -19,6 +20,12 @@ var log = loggo.GetLogger("main")
 
 var branch string
 var revision string
+
+var CONFIG_FILE_LOCATIONS = []string{
+	"/etc",
+	"/run/secrets",
+	".",
+}
 
 type IRCCat struct {
 	auth_channel string
@@ -40,15 +47,15 @@ func main() {
 		viper.SetConfigFile(*configFile)
 	} else {
 		viper.SetConfigName("irccat")
-		viper.AddConfigPath("/run/secrets")
-		viper.AddConfigPath("/etc")
-		viper.AddConfigPath(".")
+		for _, p := range CONFIG_FILE_LOCATIONS {
+			viper.AddConfigPath(p)
+		}
 	}
 	var err error
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		log.Errorf("Error reading config file - exiting. I'm looking for irccat.[json|yaml|toml|hcl] in . or /etc")
+		log.Errorf("Error reading config file - exiting. I'm looking for irccat.[json|yaml|toml|hcl] in one of %s", strings.Join(CONFIG_FILE_LOCATIONS, ", "))
 		return
 	}
 
