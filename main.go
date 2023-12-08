@@ -31,14 +31,19 @@ type IRCCat struct {
 
 func main() {
 	debug := flag.Bool("debug", false, "Print raw IRC lines")
+	configFile := flag.String("config", "", "Path to config file to use")
 	flag.Parse()
 
 	loggo.ConfigureLoggers("<root>=INFO")
 	log.Infof("IRCCat %s (%s) starting...", branch, revision)
-	viper.SetConfigName("irccat")
-	viper.AddConfigPath("/run/secrets")
-	viper.AddConfigPath("/etc")
-	viper.AddConfigPath(".")
+	if *configFile != "" {
+		viper.SetConfigFile(*configFile)
+	} else {
+		viper.SetConfigName("irccat")
+		viper.AddConfigPath("/run/secrets")
+		viper.AddConfigPath("/etc")
+		viper.AddConfigPath(".")
+	}
 	var err error
 
 	err = viper.ReadInConfig()
