@@ -70,10 +70,13 @@ func main() {
 	signal.Notify(irccat.signals, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	go irccat.signalHandler()
 
-	irccat.tcp, err = tcplistener.New()
-	if err != nil {
-		log.Criticalf("Error starting TCP listener: %s", err)
-		return
+	if viper.IsSet("tcp.listen") {
+		irccat.tcp, err = tcplistener.New()
+		if err != nil {
+			log.Criticalf("Error starting TCP listener: %s", err)
+			return
+		}
+		irccat.tcp.Run(irccat.irc)
 	}
 
 	err = irccat.connectIRC(*debug)
@@ -87,7 +90,6 @@ func main() {
 		httplistener.New(irccat.irc)
 	}
 
-	irccat.tcp.Run(irccat.irc)
 	irccat.irc.Loop()
 }
 
