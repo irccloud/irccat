@@ -45,6 +45,12 @@ func New(irc *irc.Connection) (*HTTPListener, error) {
 		mux.HandleFunc("/prometheus", hl.prometheusHandler)
 	}
 
+	if viper.IsSet("http.health_endpoint") {
+		ep := viper.GetString("http.health_endpoint")
+		log.Infof("Listening for HTTP GET requests at", ep)
+		mux.HandleFunc(ep, hl.healthHandler)
+	}
+
 	hl.http.Handler = mux
 	if viper.GetBool("http.tls") {
 		go hl.http.ListenAndServeTLS(viper.GetString("http.tls_cert"), viper.GetString("http.tls_key"))

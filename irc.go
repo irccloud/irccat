@@ -19,6 +19,9 @@ func (i *IRCCat) connectIRC(debug bool) error {
 	irccon.Timeout = time.Second * 15
 	irccon.RequestCaps = []string{"away-notify", "account-notify", "draft/message-tags-0.2"}
 	irccon.UseTLS = viper.GetBool("irc.tls")
+	if viper.IsSet("irc.health_period") {
+		irccon.PingFreq = viper.GetDuration("irc.health_period")
+	}
 
 	if viper.IsSet("irc.sasl_pass") && viper.GetString("irc.sasl_pass") != "" {
 		if viper.IsSet("irc.sasl_login") && viper.GetString("irc.sasl_login") != "" {
@@ -64,6 +67,7 @@ func (i *IRCCat) connectIRC(debug bool) error {
 	irccon.AddCallback("QUIT", i.handleQuit)
 	irccon.AddCallback("KILL", i.handleQuit)
 	irccon.AddCallback("NICK", i.handleNick)
+	irccon.AddCallback("PONG", i.handlePong)
 
 	return nil
 }

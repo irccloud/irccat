@@ -21,7 +21,11 @@ RUN CGO_ENABLED=0 go get -t -v ./... && go build -a .
 # Step two: copy over the binary and root certs
 FROM scratch
 COPY --from=build /go/bin/irccat /irccat
+COPY --from=build /go/bin/healthcheck /healthcheck
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+
+# Docker-only (no OCI)
+HEALTHCHECK --interval=60s --timeout=10s --start-period=600s CMD ["/healthcheck"]
 
 EXPOSE 12345
 EXPOSE 8045

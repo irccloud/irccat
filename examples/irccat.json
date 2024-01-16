@@ -20,7 +20,8 @@
 	    "irccat": "#irccat-dev"
 	}
        }
-    }
+    },
+    "health_endpoint": "/healthz"
   },
   "irc": {
     "server": "irc.example.com:6697",
@@ -36,7 +37,9 @@
     "sasl_login": "",
     "sasl_pass": "",
     "channels": ["#channel"],
-    "keys": {"#channel": "join_key"}
+    "keys": {"#channel": "join_key"},
+    "health_file": "./health.timestamp",
+    "health_period": "5m"
   },
   "commands": {
     "auth_channel": "#channel",
