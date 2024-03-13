@@ -16,6 +16,10 @@ builds:
     ldflags:
       - -X main.branch={{.Version}} -X main.revision={{.Commit}}
 
+dockers:
+  - image_templates:
+    - ghcr.io/irccloud/irccat
+
 changelog:
   sort: asc
   filters:
