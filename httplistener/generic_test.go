@@ -196,7 +196,7 @@ func testMultipartBase64(t *testing.T) {
 	}
 }
 
-func TestAll(t *testing.T) {
+func TestGeneric(t *testing.T) {
 	writer, err := loggo.RemoveWriter("default")
 	if err != nil {
 		t.Error(err)
