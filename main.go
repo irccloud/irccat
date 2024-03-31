@@ -70,6 +70,13 @@ func main() {
 	signal.Notify(irccat.signals, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	go irccat.signalHandler()
 
+	err = irccat.connectIRC(*debug)
+
+	if err != nil {
+		log.Criticalf("Error connecting to IRC server: %s", err)
+		return
+	}
+
 	if viper.IsSet("tcp.listen") {
 		irccat.tcp, err = tcplistener.New()
 		if err != nil {
@@ -77,13 +84,6 @@ func main() {
 			return
 		}
 		irccat.tcp.Run(irccat.irc)
-	}
-
-	err = irccat.connectIRC(*debug)
-
-	if err != nil {
-		log.Criticalf("Error connecting to IRC server: %s", err)
-		return
 	}
 
 	if viper.IsSet("http") {
