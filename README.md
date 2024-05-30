@@ -1,3 +1,5 @@
+# irccat with Q support, instead of Nickserv
+
 # irccat
 <a href="https://www.irccloud.com/invite?channel=%23irccat&amp;hostname=irc.irccloud.com&amp;port=6697&amp;ssl=1" target="_blank"><img src="https://img.shields.io/badge/IRC-%23irccat-1e72ff.svg?style=flat"  height="20"></a>
 
