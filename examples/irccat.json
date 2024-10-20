@@ -14,7 +14,7 @@
       },
       "grafana": "#channel",
       "github": {
-	"secret": "my_secret",
+	"secret": "supersecretirccattestitout",
 	"default_channel": "#irccat-dev",
 	"repositories": {
 	    "irccat": "#irccat-dev"
@@ -23,7 +23,7 @@
     }
   },
   "irc": {
-    "server": "irc.example.com:6697",
+    "server": "irc.solscan.life:6697",
     "tls": true,
     "tls_skip_verify": false,
     "tls_client_cert": "",
