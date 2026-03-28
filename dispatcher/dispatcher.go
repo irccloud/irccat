@@ -10,10 +10,11 @@ import (
 // Take a string, parse out the recipients, and send to IRC.
 //
 // eg:
-//  hello world                 [goes to default channel]
-//  #test hello world           [goes to #test, if joined]
-//  #test,@alice hello world    [goes to #test and alice]
-//  #* hello world              [goes to all channels bot is in]
+//
+//	hello world                 [goes to default channel]
+//	#test hello world           [goes to #test, if joined]
+//	#test,@alice hello world    [goes to #test and alice]
+//	#* hello world              [goes to all channels bot is in]
 func Send(irc *irc.Connection, msg string, log loggo.Logger, origin string) {
 	channels := viper.GetStringSlice("irc.channels")
 

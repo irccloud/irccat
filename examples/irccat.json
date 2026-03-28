@@ -14,12 +14,13 @@
       },
       "grafana": "#channel",
       "github": {
-	"secret": "my_secret",
-	"default_channel": "#irccat-dev",
-	"repositories": {
-	    "irccat": "#irccat-dev"
-	}
-       }
+        "secret": "my_secret",
+        "default_channel": "#irccat-dev",
+        "mute_merge_queues": true,
+        "repositories": {
+          "irccat": "#irccat-dev"
+        }
+      }
     }
   },
   "irc": {
@@ -35,8 +36,12 @@
     "sasl_external": false,
     "sasl_login": "",
     "sasl_pass": "",
-    "channels": ["#channel"],
-    "keys": {"#channel": "join_key"}
+    "channels": [
+      "#channel"
+    ],
+    "keys": {
+      "#channel": "join_key"
+    }
   },
   "commands": {
     "auth_channel": "#channel",

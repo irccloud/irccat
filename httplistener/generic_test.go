@@ -7,44 +7,43 @@
 //
 // mismatch
 //
-//  $ echo "%BOLDhw" | curl -d @- http://localhost/send
-//  400 Bad Request
+//	$ echo "%BOLDhw" | curl -d @- http://localhost/send
+//	400 Bad Request
 //
 // urlencoded
 //
-//  $ echo "%BOLDhw" | curl --data-urlencode  @- http://localhost/send
-//  200 OK
+//	$ echo "%BOLDhw" | curl --data-urlencode  @- http://localhost/send
+//	200 OK
 //
 // urlencoded non-printable
 //
-//  $ printf "\x02hw" | curl --data-urlencode  @- http://localhost/send
-//  200 OK
+//	$ printf "\x02hw" | curl --data-urlencode  @- http://localhost/send
+//	200 OK
 //
 // octetstream
 //
-//  $ echo "%BOLDhw" | curl --data-binary @- \
-//    -H 'Content-Type: application/octet-stream' http://localhost/send
-//  200 OK
+//	$ echo "%BOLDhw" | curl --data-binary @- \
+//	  -H 'Content-Type: application/octet-stream' http://localhost/send
+//	200 OK
 //
 // multipart quoted-printable
 //
-//  $ echo '%BOLDhw' | curl -F 'foo=@-;encoder=quoted-printable' \
-//    http://localhost/send
-//  200 OK
+//	$ echo '%BOLDhw' | curl -F 'foo=@-;encoder=quoted-printable' \
+//	  http://localhost/send
+//	200 OK
 //
 // multipart 8bit
 //
-//  $ echo '%BOLDhw' | curl -F 'foo=@-;encoder=8bit' http://localhost/send
-//  200 OK
+//	$ echo '%BOLDhw' | curl -F 'foo=@-;encoder=8bit' http://localhost/send
+//	200 OK
 //
 // multipart base64
 //
-//  $ echo '%BOLDhw' | curl -F 'foo=@-;encoder=base64' http://localhost/send
-//  200 OK
+//	$ echo '%BOLDhw' | curl -F 'foo=@-;encoder=base64' http://localhost/send
+//	200 OK
 //
 // The gist is that when strict mode is active, popular encodings will work
 // while mismatches won't, even though they may still appear to at times.
-//
 package httplistener
 
 import (
@@ -72,7 +71,7 @@ func genericTestStartHTTPServer(t *testing.T, endpoint string) {
 
 	http.HandleFunc(endpoint, hl.genericHandler)
 	go hl.http.ListenAndServe()
-	t.Cleanup(func() {hl.http.Shutdown(context.Background());})
+	t.Cleanup(func() { hl.http.Shutdown(context.Background()) })
 	time.Sleep(time.Millisecond)
 }
 
@@ -86,7 +85,7 @@ func genericTestSendOutput(message []byte) ([]byte, error) {
 		return nil, err
 	}
 	b := make([]byte, 1024)
-	_ , err = io.ReadAtLeast(conn, b, 24)
+	_, err = io.ReadAtLeast(conn, b, 24)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +98,7 @@ func runGeneric(t *testing.T, reqFileName string) (string, string) {
 	genericSender = func(_ *irc.Connection, m string, _ loggo.Logger, _ string) {
 		message = m
 	}
-	t.Cleanup(func(){genericSender = origSender})
+	t.Cleanup(func() { genericSender = origSender })
 
 	src, err := os.ReadFile(path.Join("testdata", reqFileName))
 	if err != nil {
@@ -201,7 +200,7 @@ func TestGeneric(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	t.Cleanup(func() {loggo.DefaultContext().AddWriter("default", writer)})
+	t.Cleanup(func() { loggo.DefaultContext().AddWriter("default", writer) })
 	genericTestStartHTTPServer(t, "/send")
 
 	t.Run("Baseline", testGenericBaseline)
