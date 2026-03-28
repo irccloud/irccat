@@ -16,6 +16,10 @@ func interestingIssueAction(action string) bool {
 	return false
 }
 
+func isMergeQueueBranch(ref string) bool {
+	return strings.HasPrefix(ref, "gh-readonly-queue/") || strings.HasPrefix(ref, "refs/heads/gh-readonly-queue/")
+}
+
 func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Request) {
 	if request.Method != "POST" {
 		http.NotFound(w, request)
@@ -57,6 +61,9 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 		}
 	case github.PushPayload:
 		pl := payload.(github.PushPayload)
+		if viper.GetBool("http.listeners.github.mute_merge_queues") && isMergeQueueBranch(pl.Ref) {
+			return
+		}
 		send = true
 		msgs, err = hl.renderTemplate("github.push", payload)
 		repo = pl.Repository.Name
@@ -84,6 +91,9 @@ func (hl *HTTPListener) githubHandler(w http.ResponseWriter, request *http.Reque
 	case github.CheckSuitePayload:
 		pl := payload.(github.CheckSuitePayload)
 		if pl.CheckSuite.Status == "completed" && pl.CheckSuite.Conclusion == "failure" {
+			if viper.GetBool("http.listeners.github.mute_merge_queues") && isMergeQueueBranch(pl.CheckSuite.HeadBranch) {
+				return
+			}
 			send = true
 			msgs, err = hl.renderTemplate("github.checksuite", payload)
 			repo = pl.Repository.Name
