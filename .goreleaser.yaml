@@ -18,7 +18,9 @@ builds:
 
 dockers:
   - image_templates:
-    - ghcr.io/irccloud/irccat
+    - "ghcr.io/irccloud/irccat:latest"
+    - "ghcr.io/irccloud/irccat:{{ .Tag }}"
+
 
 changelog:
   sort: asc
